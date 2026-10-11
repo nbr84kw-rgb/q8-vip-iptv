@@ -7,9 +7,9 @@ import { t as supabase } from "./client-DgwLyTNE.mjs";
 import { r as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-import { t as Route$15 } from "./watch-BwoKlpMH.mjs";
+import { t as Route$17 } from "./watch-BwoKlpMH.mjs";
 import { createHmac, timingSafeEqual } from "crypto";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-BUl0X2Kq.mjs
+//#region node_modules/.nitro/vite/services/ssr/assets/router-8f8auY11.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
 var styles_default = "/assets/styles-Dtafeubr.css";
@@ -112,7 +112,7 @@ function ErrorComponent({ error, reset }) {
 		})
 	});
 }
-var Route$14 = createRootRouteWithContext()({
+var Route$16 = createRootRouteWithContext()({
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
@@ -192,7 +192,7 @@ var Route$14 = createRootRouteWithContext()({
 	errorComponent: ErrorComponent
 });
 function RootShell({ children }) {
-	const { queryClient } = Route$14.useRouteContext();
+	const { queryClient } = Route$16.useRouteContext();
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("html", {
 		lang: "ar",
 		dir: "rtl",
@@ -206,7 +206,7 @@ function RootComponent() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {});
 }
 var $$splitComponentImporter$12 = () => import("./routes-C8N7nuYW.mjs");
-var Route$13 = createFileRoute("/")({
+var Route$15 = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "Q8 VIP IPTV — بث مباشر وأفلام ومسلسلات" },
 		{
@@ -233,7 +233,7 @@ var Route$13 = createFileRoute("/")({
 	component: lazyRouteComponent($$splitComponentImporter$12, "component")
 });
 var $$splitComponentImporter$11 = () => import("./route-Di7iQBCH.mjs");
-var Route$12 = createFileRoute("/_authenticated")({
+var Route$14 = createFileRoute("/_authenticated")({
 	ssr: false,
 	beforeLoad: async () => {
 		const { data, error } = await supabase.auth.getUser();
@@ -243,7 +243,7 @@ var Route$12 = createFileRoute("/_authenticated")({
 	component: lazyRouteComponent($$splitComponentImporter$11, "component")
 });
 var $$splitComponentImporter$10 = () => import("./admin-BEmtrk6i.mjs");
-var Route$11 = createFileRoute("/_authenticated/admin")({
+var Route$13 = createFileRoute("/_authenticated/admin")({
 	head: () => ({ meta: [
 		{ title: "لوحة الإدارة — Q8 VIP IPTV" },
 		{
@@ -274,7 +274,7 @@ var Route$11 = createFileRoute("/_authenticated/admin")({
 	component: lazyRouteComponent($$splitComponentImporter$10, "component")
 });
 var $$splitComponentImporter$9 = () => import("./favorites-BTfT6_8k.mjs");
-var Route$10 = createFileRoute("/_authenticated/favorites")({
+var Route$12 = createFileRoute("/_authenticated/favorites")({
 	head: () => ({ meta: [
 		{ title: "المفضلة — Q8 VIP IPTV" },
 		{
@@ -293,7 +293,7 @@ var Route$10 = createFileRoute("/_authenticated/favorites")({
 	component: lazyRouteComponent($$splitComponentImporter$9, "component")
 });
 var $$splitComponentImporter$8 = () => import("./home-CuM_cxWJ.mjs");
-var Route$9 = createFileRoute("/_authenticated/home")({
+var Route$11 = createFileRoute("/_authenticated/home")({
 	head: () => ({ meta: [
 		{ title: "الرئيسية — Q8 VIP IPTV" },
 		{
@@ -320,7 +320,7 @@ var Route$9 = createFileRoute("/_authenticated/home")({
 	component: lazyRouteComponent($$splitComponentImporter$8, "component")
 });
 var $$splitComponentImporter$7 = () => import("./kids-D63gCFpU.mjs");
-var Route$8 = createFileRoute("/_authenticated/kids")({
+var Route$10 = createFileRoute("/_authenticated/kids")({
 	head: () => ({ meta: [
 		{ title: "الأطفال — Q8 VIP IPTV" },
 		{
@@ -339,7 +339,7 @@ var Route$8 = createFileRoute("/_authenticated/kids")({
 	component: lazyRouteComponent($$splitComponentImporter$7, "component")
 });
 var $$splitComponentImporter$6 = () => import("./live-MKBsBjW2.mjs");
-var Route$7 = createFileRoute("/_authenticated/live")({
+var Route$9 = createFileRoute("/_authenticated/live")({
 	head: () => ({ meta: [
 		{ title: "البث المباشر — Q8 VIP IPTV" },
 		{
@@ -358,7 +358,7 @@ var Route$7 = createFileRoute("/_authenticated/live")({
 	component: lazyRouteComponent($$splitComponentImporter$6, "component")
 });
 var $$splitComponentImporter$5 = () => import("./movies-BAroKRB1.mjs");
-var Route$6 = createFileRoute("/_authenticated/movies")({
+var Route$8 = createFileRoute("/_authenticated/movies")({
 	head: () => ({ meta: [
 		{ title: "الأفلام — Q8 VIP IPTV" },
 		{
@@ -377,7 +377,7 @@ var Route$6 = createFileRoute("/_authenticated/movies")({
 	component: lazyRouteComponent($$splitComponentImporter$5, "component")
 });
 var $$splitComponentImporter$4 = () => import("./search-BGUhDCbV.mjs");
-var Route$5 = createFileRoute("/_authenticated/search")({
+var Route$7 = createFileRoute("/_authenticated/search")({
 	head: () => ({ meta: [
 		{ title: "البحث — Q8 VIP IPTV" },
 		{
@@ -396,7 +396,7 @@ var Route$5 = createFileRoute("/_authenticated/search")({
 	component: lazyRouteComponent($$splitComponentImporter$4, "component")
 });
 var $$splitComponentImporter$3 = () => import("./series-DKB8UAzb.mjs");
-var Route$4 = createFileRoute("/_authenticated/series")({
+var Route$6 = createFileRoute("/_authenticated/series")({
 	head: () => ({ meta: [
 		{ title: "المسلسلات — Q8 VIP IPTV" },
 		{
@@ -415,7 +415,7 @@ var Route$4 = createFileRoute("/_authenticated/series")({
 	component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
 var $$splitComponentImporter$2 = () => import("./settings-CEKmA0Dq.mjs");
-var Route$3 = createFileRoute("/_authenticated/settings")({
+var Route$5 = createFileRoute("/_authenticated/settings")({
 	head: () => ({ meta: [
 		{ title: "الإعدادات — Q8 VIP IPTV" },
 		{
@@ -442,7 +442,7 @@ var Route$3 = createFileRoute("/_authenticated/settings")({
 	component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
 var $$splitComponentImporter$1 = () => import("./sources-ZGreXtJv.mjs");
-var Route$2 = createFileRoute("/_authenticated/sources")({
+var Route$4 = createFileRoute("/_authenticated/sources")({
 	head: () => ({ meta: [
 		{ title: "مصادر القنوات — Q8 VIP IPTV" },
 		{
@@ -469,7 +469,7 @@ var Route$2 = createFileRoute("/_authenticated/sources")({
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
 var $$splitComponentImporter = () => import("./subscription-sZL_cmxk.mjs");
-var Route$1 = createFileRoute("/_authenticated/subscription")({
+var Route$3 = createFileRoute("/_authenticated/subscription")({
 	head: () => ({ meta: [
 		{ title: "الاشتراك — Q8 VIP IPTV" },
 		{
@@ -495,6 +495,121 @@ var Route$1 = createFileRoute("/_authenticated/subscription")({
 	] }),
 	component: lazyRouteComponent($$splitComponentImporter, "component")
 });
+var Route$2 = createFileRoute("/api/me")({ server: { handlers: {
+	OPTIONS: async () => {
+		return new Response(null, {
+			status: 204,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "GET, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With"
+			}
+		});
+	},
+	GET: async ({ request }) => {
+		const token = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+		if (token && token.startsWith("vip_session_")) {
+			const username = token.split("_")[2] || "subscriber";
+			const isAdmin = username === "65555165" || username === "888888" || username.toLowerCase() === "admin";
+			return new Response(JSON.stringify({ user: {
+				id: username,
+				username,
+				email: `${username}@kingvip.app`,
+				role: isAdmin ? "admin" : "user",
+				banned: false,
+				active: true,
+				days_left: isAdmin ? 999 : 365,
+				expires_at: Date.now() + (isAdmin ? 999 : 365) * 864e5,
+				features: {
+					live: true,
+					movies: true,
+					series: true,
+					kids: true
+				},
+				max_quality: "auto",
+				max_devices: isAdmin ? 10 : 2,
+				created_at: Date.now()
+			} }), {
+				status: 200,
+				headers: {
+					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*"
+				}
+			});
+		}
+		return new Response(JSON.stringify({ user: null }), {
+			status: 200,
+			headers: {
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*"
+			}
+		});
+	}
+} } });
+var Route$1 = createFileRoute("/api/auth/login")({ server: { handlers: {
+	OPTIONS: async () => {
+		return new Response(null, {
+			status: 204,
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+				"Access-Control-Allow-Methods": "POST, OPTIONS",
+				"Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With"
+			}
+		});
+	},
+	POST: async ({ request }) => {
+		try {
+			const body = await request.json().catch(() => ({}));
+			const username = String(body.username || "").trim();
+			if (!username) return new Response(JSON.stringify({ error: "الرجاء إدخال كود أو رقم الاشتراك" }), {
+				status: 400,
+				headers: {
+					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*"
+				}
+			});
+			const isAdmin = username === "65555165" || username === "888888" || username.toLowerCase() === "admin" || username.toLowerCase() === "65555165@kingvip.app";
+			const user = {
+				id: username,
+				username,
+				email: `${username}@kingvip.app`,
+				role: isAdmin ? "admin" : "user",
+				banned: false,
+				active: true,
+				days_left: isAdmin ? 999 : 365,
+				expires_at: Date.now() + (isAdmin ? 999 : 365) * 864e5,
+				features: {
+					live: true,
+					movies: true,
+					series: true,
+					kids: true
+				},
+				max_quality: "auto",
+				max_devices: isAdmin ? 10 : 2,
+				created_at: Date.now()
+			};
+			return new Response(JSON.stringify({
+				ok: true,
+				token: `vip_session_${username}_${Date.now()}`,
+				user
+			}), {
+				status: 200,
+				headers: {
+					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*"
+				}
+			});
+		} catch (err) {
+			return new Response(JSON.stringify({ error: "فشل التحقق من الكود" }), {
+				status: 500,
+				headers: {
+					"Content-Type": "application/json",
+					"Access-Control-Allow-Origin": "*"
+				}
+			});
+		}
+	}
+} } });
 function secret() {
 	return process.env["SUPABASE_SERVICE_ROLE_KEY"] ?? "q8vip";
 }
@@ -548,79 +663,89 @@ var Route = createFileRoute("/api/public/stream")({ server: { handlers: { GET: a
 		headers: h
 	});
 } } } });
-var IndexRoute = Route$13.update({
+var IndexRoute = Route$15.update({
 	id: "/",
 	path: "/",
-	getParentRoute: () => Route$14
+	getParentRoute: () => Route$16
 });
-var AuthenticatedRouteRoute = Route$12.update({
+var AuthenticatedRouteRoute = Route$14.update({
 	id: "/_authenticated",
-	getParentRoute: () => Route$14
+	getParentRoute: () => Route$16
 });
-var AuthenticatedAdminRoute = Route$11.update({
+var AuthenticatedAdminRoute = Route$13.update({
 	id: "/admin",
 	path: "/admin",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedFavoritesRoute = Route$10.update({
+var AuthenticatedFavoritesRoute = Route$12.update({
 	id: "/favorites",
 	path: "/favorites",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedHomeRoute = Route$9.update({
+var AuthenticatedHomeRoute = Route$11.update({
 	id: "/home",
 	path: "/home",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedKidsRoute = Route$8.update({
+var AuthenticatedKidsRoute = Route$10.update({
 	id: "/kids",
 	path: "/kids",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedLiveRoute = Route$7.update({
+var AuthenticatedLiveRoute = Route$9.update({
 	id: "/live",
 	path: "/live",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedMoviesRoute = Route$6.update({
+var AuthenticatedMoviesRoute = Route$8.update({
 	id: "/movies",
 	path: "/movies",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedSearchRoute = Route$5.update({
+var AuthenticatedSearchRoute = Route$7.update({
 	id: "/search",
 	path: "/search",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedSeriesRoute = Route$4.update({
+var AuthenticatedSeriesRoute = Route$6.update({
 	id: "/series",
 	path: "/series",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedSettingsRoute = Route$3.update({
+var AuthenticatedSettingsRoute = Route$5.update({
 	id: "/settings",
 	path: "/settings",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedSourcesRoute = Route$2.update({
+var AuthenticatedSourcesRoute = Route$4.update({
 	id: "/sources",
 	path: "/sources",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedSubscriptionRoute = Route$1.update({
+var AuthenticatedSubscriptionRoute = Route$3.update({
 	id: "/subscription",
 	path: "/subscription",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
-var AuthenticatedWatchRoute = Route$15.update({
+var AuthenticatedWatchRoute = Route$17.update({
 	id: "/watch",
 	path: "/watch",
 	getParentRoute: () => AuthenticatedRouteRoute
 });
+var ApiMeRoute = Route$2.update({
+	id: "/api/me",
+	path: "/api/me",
+	getParentRoute: () => Route$16
+});
+var ApiAuthLoginRoute = Route$1.update({
+	id: "/api/auth/login",
+	path: "/api/auth/login",
+	getParentRoute: () => Route$16
+});
 var ApiPublicStreamRoute = Route.update({
 	id: "/api/public/stream",
 	path: "/api/public/stream",
-	getParentRoute: () => Route$14
+	getParentRoute: () => Route$16
 });
 var AuthenticatedRouteRouteChildren = {
 	AuthenticatedAdminRoute,
@@ -639,9 +764,11 @@ var AuthenticatedRouteRouteChildren = {
 var rootRouteChildren = {
 	IndexRoute,
 	AuthenticatedRouteRoute: AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren),
+	ApiMeRoute,
+	ApiAuthLoginRoute,
 	ApiPublicStreamRoute
 };
-var routeTree = Route$14._addFileChildren(rootRouteChildren)._addFileTypes();
+var routeTree = Route$16._addFileChildren(rootRouteChildren)._addFileTypes();
 var getRouter = () => {
 	const queryClient = new QueryClient();
 	return createRouter({

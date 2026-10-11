@@ -1,10 +1,12 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-ioRcCvjv.mjs
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-Dww9zK8W.mjs
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "C:/Users/win/.gemini/antigravity/scratch/iptv-site/src/routes/__root.tsx",
 		children: [
 			"/",
 			"/_authenticated",
+			"/api/me",
+			"/api/auth/login",
 			"/api/public/stream"
 		],
 		preloads: [

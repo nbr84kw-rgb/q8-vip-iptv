@@ -23,6 +23,8 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedSourcesRouteImport } from './routes/_authenticated/sources'
 import { Route as AuthenticatedSubscriptionRouteImport } from './routes/_authenticated/subscription'
 import { Route as AuthenticatedWatchRouteImport } from './routes/_authenticated/watch'
+import { Route as ApiMeRouteImport } from './routes/api/me'
+import { Route as ApiAuthLoginRouteImport } from './routes/api/auth/login'
 import { Route as ApiPublicStreamRouteImport } from './routes/api/public/stream'
 
 const IndexRoute = IndexRouteImport.update({
@@ -95,6 +97,16 @@ const AuthenticatedWatchRoute = AuthenticatedWatchRouteImport.update({
   path: '/watch',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiMeRoute = ApiMeRouteImport.update({
+  id: '/api/me',
+  path: '/api/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
+  id: '/api/auth/login',
+  path: '/api/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicStreamRoute = ApiPublicStreamRouteImport.update({
   id: '/api/public/stream',
   path: '/api/public/stream',
@@ -115,6 +127,8 @@ export interface FileRoutesByFullPath {
   '/sources': typeof AuthenticatedSourcesRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/watch': typeof AuthenticatedWatchRoute
+  '/api/me': typeof ApiMeRoute
+  '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/public/stream': typeof ApiPublicStreamRoute
 }
 export interface FileRoutesByTo {
@@ -131,6 +145,8 @@ export interface FileRoutesByTo {
   '/sources': typeof AuthenticatedSourcesRoute
   '/subscription': typeof AuthenticatedSubscriptionRoute
   '/watch': typeof AuthenticatedWatchRoute
+  '/api/me': typeof ApiMeRoute
+  '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/public/stream': typeof ApiPublicStreamRoute
 }
 export interface FileRoutesById {
@@ -149,6 +165,8 @@ export interface FileRoutesById {
   '/_authenticated/sources': typeof AuthenticatedSourcesRoute
   '/_authenticated/subscription': typeof AuthenticatedSubscriptionRoute
   '/_authenticated/watch': typeof AuthenticatedWatchRoute
+  '/api/me': typeof ApiMeRoute
+  '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/public/stream': typeof ApiPublicStreamRoute
 }
 export interface FileRouteTypes {
@@ -167,6 +185,8 @@ export interface FileRouteTypes {
     | '/sources'
     | '/subscription'
     | '/watch'
+    | '/api/me'
+    | '/api/auth/login'
     | '/api/public/stream'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -183,6 +203,8 @@ export interface FileRouteTypes {
     | '/sources'
     | '/subscription'
     | '/watch'
+    | '/api/me'
+    | '/api/auth/login'
     | '/api/public/stream'
   id:
     | '__root__'
@@ -200,12 +222,16 @@ export interface FileRouteTypes {
     | '/_authenticated/sources'
     | '/_authenticated/subscription'
     | '/_authenticated/watch'
+    | '/api/me'
+    | '/api/auth/login'
     | '/api/public/stream'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  ApiMeRoute: typeof ApiMeRoute
+  ApiAuthLoginRoute: typeof ApiAuthLoginRoute
   ApiPublicStreamRoute: typeof ApiPublicStreamRoute
 }
 
@@ -309,6 +335,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWatchRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/me': {
+      id: '/api/me'
+      path: '/api/me'
+      fullPath: '/api/me'
+      preLoaderRoute: typeof ApiMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/login': {
+      id: '/api/auth/login'
+      path: '/api/auth/login'
+      fullPath: '/api/auth/login'
+      preLoaderRoute: typeof ApiAuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/stream': {
       id: '/api/public/stream'
       path: '/api/public/stream'
@@ -355,6 +395,8 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  ApiMeRoute: ApiMeRoute,
+  ApiAuthLoginRoute: ApiAuthLoginRoute,
   ApiPublicStreamRoute: ApiPublicStreamRoute,
 }
 export const routeTree = rootRouteImport
