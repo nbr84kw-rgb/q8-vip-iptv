@@ -1,0 +1,6 @@
+node_modules/
+cloudflared.exe
+tunnel.log
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: q8-vip-iptv
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SITE_NAME
+        value: Q8 VIP IPTV Pro
+      - key: TRIAL_DAYS
+        value: 1
+      - key: CURRENCY
+        value: د.ك
+      - key: NODE_ENV
+        value: production
+    disk:
+      name: iptv-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

@@ -1,0 +1,15 @@
+{
+  "name": "iptv-site",
+  "version": "1.0.0",
+  "description": "منصة IPTV بنظام اشتراكات ولوحة تحكم",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

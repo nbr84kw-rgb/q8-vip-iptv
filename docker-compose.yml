@@ -1,0 +1,21 @@
+services:
+  q8-iptv:
+    build: .
+    container_name: q8_vip_iptv
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - iptv_data:/app/data
+    environment:
+      - PORT=3000
+      - SITE_NAME=Q8 VIP IPTV Pro
+      - CONTACT_URL=https://wa.me/96500000000
+      - CURRENCY=د.ك
+      - ADMIN_USER=admin
+      - ADMIN_PASS=q8vip2026pass
+      - TRIAL_DAYS=1
+      - NODE_ENV=production
+
+volumes:
+  iptv_data:

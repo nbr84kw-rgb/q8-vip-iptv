@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.q8vip.iptv'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.q8vip.iptv"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        // الرابط الافتراضي لسيرفر المنصة على الإنترنت
+        manifestPlaceholders = [
+            defaultServerUrl: "http://10.0.2.2:3100" // أو رابط السيرفر الأونلاين
+        ]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.leanback:leanback:1.0.0'
+}

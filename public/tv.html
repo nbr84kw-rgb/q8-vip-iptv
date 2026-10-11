@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Q8 VIP IPTV Pro - Lion Ultra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tv.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+</head>
+<body class="tv-body">
+
+  <!-- ==================== الشاشة الرئيسية الكبرى (LION ULTRA MASTER DASHBOARD) ==================== -->
+  <div class="lion-screen" id="lionMainScreen">
+    
+    <!-- 1. الشريط العلوي: تاريخ انتهاء الاشتراك -->
+    <header class="lion-top-bar">
+      <div class="expires-text">
+        Expires: <b id="topExpiryDate">--/--/----</b>
+      </div>
+    </header>
+
+    <!-- 2. الشعار في المنتصف: رأس الأسد + اسم التطبيق باللون الذهبي -->
+    <div class="lion-center-logo">
+      <!-- أيقونة رأس الأسد الذهبية بدقة SVG فائقة ومطابقة للشعار -->
+      <svg class="lion-logo-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="goldLionGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fff099" />
+            <stop offset="45%" stop-color="#d4af37" />
+            <stop offset="100%" stop-color="#8a6808" />
+          </linearGradient>
+        </defs>
+        <!-- رأس الأسد الفاخر -->
+        <path d="M50 8 C32 8 20 22 18 36 C16 48 22 62 26 70 C32 82 44 92 50 94 C56 92 68 82 74 70 C78 62 84 48 82 36 C80 22 68 8 50 8 Z" fill="url(#goldLionGrad)" />
+        <path d="M50 16 C38 16 28 26 26 38 C28 50 34 62 50 78 C66 62 72 50 74 38 C72 26 62 16 50 16 Z" fill="#0c121e" />
+        <path d="M50 24 L56 38 L70 38 L58 48 L62 62 L50 52 L38 62 L42 48 L30 38 L44 38 Z" fill="url(#goldLionGrad)" />
+      </svg>
+      <div class="lion-app-title">Q8 VIP ULTRA</div>
+      <div class="lion-app-subtitle">IPTV PRO</div>
+    </div>
+
+    <!-- 3. شبكة الأزرار الرئيسية (مطابقة 100% لتوزيع الصورة المرفقة) -->
+    <main class="lion-grid-container">
+      
+      <!-- [اليسار]: بطاقة Live الكبيرة مع أيقونة التلفزيون والريموت -->
+      <div class="card-live focusable" id="btnLive" tabindex="0">
+        <svg class="main-icon" viewBox="0 0 120 100" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <!-- شاشة التلفزيون -->
+          <rect x="6" y="8" width="82" height="58" rx="8" />
+          <line x1="32" y1="66" x2="62" y2="66" />
+          <line x1="24" y1="76" x2="70" y2="76" />
+          <line x1="47" y1="66" x2="47" y2="76" />
+          <!-- قوس الإشارة في التلفزيون -->
+          <path d="M72 18 C76 18 78 20 78 24" />
+          <!-- الريموت كنترول المتداخل -->
+          <rect x="66" y="28" width="30" height="62" rx="6" fill="#0d1422" stroke="#ffffff" stroke-width="3" />
+          <circle cx="81" cy="40" r="5" fill="#d4af37" />
+          <circle cx="75" cy="54" r="2.5" fill="#ffffff" />
+          <circle cx="87" cy="54" r="2.5" fill="#ffffff" />
+          <circle cx="75" cy="64" r="2.5" fill="#ffffff" />
+          <circle cx="87" cy="64" r="2.5" fill="#ffffff" />
+          <circle cx="75" cy="74" r="2.5" fill="#ffffff" />
+          <circle cx="87" cy="74" r="2.5" fill="#ffffff" />
+        </svg>
+        <div class="card-label">Live</div>
+      </div>
+
+      <!-- [الوسط]: شبكة الأزرار الأربعة (Movies, Series, Sports, Playlist) -->
+      <div class="cards-mid-grid">
+        
+        <!-- Movies (بكرة شريط الفيلم) -->
+        <div class="card-mid focusable" id="btnMovies" tabindex="0">
+          <svg class="mid-icon" viewBox="0 0 60 60" fill="none" stroke="#ffffff" stroke-width="2.5">
+            <circle cx="30" cy="24" r="16" />
+            <circle cx="30" cy="24" r="5" fill="#d4af37" />
+            <circle cx="22" cy="18" r="2.5" fill="#ffffff" />
+            <circle cx="38" cy="18" r="2.5" fill="#ffffff" />
+            <circle cx="22" cy="30" r="2.5" fill="#ffffff" />
+            <circle cx="38" cy="30" r="2.5" fill="#ffffff" />
+            <!-- شريط الفيلم المنحني -->
+            <path d="M12 40 C20 36 40 44 48 38 L50 48 C42 54 22 46 14 50 Z" fill="rgba(212,175,55,0.3)" />
+          </svg>
+          <div class="card-label">Movies</div>
+        </div>
+
+        <!-- Series (مقطع فيلم كلاكيت) -->
+        <div class="card-mid focusable" id="btnSeries" tabindex="0">
+          <svg class="mid-icon" viewBox="0 0 60 60" fill="none" stroke="#ffffff" stroke-width="2.5">
+            <rect x="10" y="14" width="40" height="34" rx="4" />
+            <polygon points="26,23 38,31 26,39" fill="#d4af37" stroke="none" />
+            <!-- علامات الفيلم على الجوانب -->
+            <line x1="16" y1="14" x2="16" y2="48" stroke-dasharray="3 3" />
+            <line x1="44" y1="14" x2="44" y2="48" stroke-dasharray="3 3" />
+          </svg>
+          <div class="card-label">Series</div>
+        </div>
+
+        <!-- Sports (كرة قدم مع إشارة بث) -->
+        <div class="card-mid focusable" id="btnSports" tabindex="0">
+          <svg class="mid-icon" viewBox="0 0 60 60" fill="none" stroke="#ffffff" stroke-width="2.5">
+            <circle cx="30" cy="35" r="14" />
+            <polygon points="30,28 35,32 33,38 27,38 25,32" fill="#d4af37" stroke="none" />
+            <!-- موجات البث الرياضية -->
+            <path d="M22 17 C26 13 34 13 38 17" />
+            <path d="M16 11 C24 5 36 5 44 11" />
+          </svg>
+          <div class="card-label">Sports</div>
+        </div>
+
+        <!-- Playlist (سيرفرات وقوائم تشغيل) -->
+        <div class="card-mid focusable" id="btnPlaylist" tabindex="0">
+          <svg class="mid-icon" viewBox="0 0 60 60" fill="none" stroke="#ffffff" stroke-width="2.5">
+            <rect x="12" y="14" width="36" height="12" rx="3" />
+            <rect x="12" y="32" width="36" height="12" rx="3" />
+            <circle cx="20" cy="20" r="2" fill="#d4af37" />
+            <circle cx="20" cy="38" r="2" fill="#d4af37" />
+            <line x1="28" y1="20" x2="40" y2="20" />
+            <line x1="28" y1="38" x2="40" y2="38" />
+            <path d="M22 50 C26 53 34 53 38 50" stroke-linecap="round" />
+          </svg>
+          <div class="card-label">Playlist</div>
+        </div>
+
+      </div>
+
+      <!-- [اليمين]: الأزرار الثلاثة المستطيلة (Settings, Reload, EXIT) -->
+      <div class="cards-right-col">
+        
+        <!-- Settings (الترس) -->
+        <div class="card-btn-wide focusable" id="btnSettings" tabindex="0">
+          <svg class="wide-icon" viewBox="0 0 40 40" fill="none" stroke="#ffffff" stroke-width="2.5">
+            <circle cx="20" cy="20" r="6" />
+            <path d="M20 7 L20 11 M20 29 L20 33 M7 20 L11 20 M29 20 L33 20 M11 11 L14 14 M26 26 L29 29 M11 29 L14 26 M26 14 L29 11" stroke-linecap="round" />
+          </svg>
+          <div class="card-label">Settings</div>
+        </div>
+
+        <!-- Reload (سهم التحديث الدائري) -->
+        <div class="card-btn-wide focusable" id="btnReload" tabindex="0">
+          <svg class="wide-icon" viewBox="0 0 40 40" fill="none" stroke="#ffffff" stroke-width="2.5">
+            <path d="M30 20 A 10 10 0 1 1 27 12" stroke-linecap="round" />
+            <polyline points="23 12 28 12 28 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <div class="card-label">Reload</div>
+        </div>
+
+        <!-- EXIT (أيقونة الخروج) -->
+        <div class="card-btn-wide focusable" id="btnExit" tabindex="0">
+          <svg class="wide-icon" viewBox="0 0 40 40" fill="none" stroke="#ffffff" stroke-width="2.5">
+            <path d="M16 10 L10 10 L10 30 L16 30" stroke-linecap="round" stroke-linejoin="round" />
+            <polyline points="24 14 30 20 24 26" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="30" y1="20" x2="16" y2="20" stroke-linecap="round" />
+          </svg>
+          <div class="card-label">EXIT</div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- 4. الشريط السفلي: رقم الإصدار في اليمين السفلي تماماً كما بالصورة -->
+    <footer class="lion-footer-bar">
+      <div class="version-text">v4.3</div>
+    </footer>
+
+  </div>
+
+  <!-- ==================== شاشة عرض وتشغيل القنوات (LIVE CHANNELS MODAL) ==================== -->
+  <div class="channels-view-modal" id="channelsModal" style="display: none;">
+    <!-- الفئات -->
+    <aside class="ch-side-col">
+      <div class="ch-side-header">
+        <span>CATEGORIES</span>
+        <button class="focusable" id="btnCloseLiveView" style="background:transparent;border:none;color:#fff;font-size:1.1rem;cursor:pointer;">⟵ Back</button>
+      </div>
+      <div class="ch-scroll-list" id="tvCatScroll"></div>
+    </aside>
+
+    <!-- قائمة القنوات -->
+    <section class="ch-side-col" style="background: rgba(14,20,32,0.95);">
+      <div class="ch-side-header" id="tvChannelHeading">CHANNELS</div>
+      <div class="ch-scroll-list" id="tvChScroll"></div>
+    </section>
+
+    <!-- مشغل الفيديو -->
+    <main class="video-container" id="tvPlayerContainer">
+      <video id="hlsVideoPlayer" class="video-player" autoplay playsinline></video>
+      <div class="osd-bar-gold hidden-osd" id="tvOsdBar">
+        <div>
+          <h3 id="osdTitleText" style="color:#fff; margin-bottom: 2px;">Channel Name</h3>
+          <p id="osdCategoryText" style="color:var(--text-muted); font-size: 0.95rem;">Live Stream</p>
+        </div>
+        <div style="color:var(--gold-primary); font-weight: bold;">FHD 1080P</div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== نافذة الإعدادات وتجديد الاشتراك (SETTINGS MODAL) ==================== -->
+  <div class="pop-modal-overlay" id="settingsModal" style="display: none;">
+    <div class="pop-modal-box" style="width: 580px; max-height: 90vh; overflow-y: auto;">
+      <h2 style="color: var(--gold-primary); margin-bottom: 6px;">Settings & Information</h2>
+      <p style="color: var(--text-muted); margin-bottom: 18px;">Q8 VIP ULTRA • SYSTEM INFO</p>
+
+      <!-- تفاصيل الحساب والإصدار -->
+      <div style="background: rgba(0,0,0,0.5); padding: 16px; border-radius: 12px; margin-bottom: 16px; text-align: left; font-size: 1.05rem; border: 1px solid rgba(212,175,55,0.2);">
+        <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+          <span style="color:var(--text-muted);">Subscription ID:</span>
+          <b id="settingsUsername" style="color:#fff; font-family:monospace; font-size:1.15rem;">-</b>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+          <span style="color:var(--text-muted);">Status:</span>
+          <span id="settingsStatus" style="color:var(--gold-primary); font-weight:bold;">Active</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+          <span style="color:var(--text-muted);">Expires Date:</span>
+          <b id="settingsExpiresDate" style="color:#fff;">--/--/----</b>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px; margin-top:8px;">
+          <span style="color:var(--gold-primary); font-weight:bold;">App Version:</span>
+          <b style="color:#2ecc71; font-family:monospace;">v4.3 (Build 2026.10) - Stable</b>
+        </div>
+      </div>
+
+      <!-- زر خاص يظهر فقط للأدمن للتحكم بالسيرفر والقنوات من التلفزيون -->
+      <div id="adminMasterSection" style="display: none; margin-bottom: 16px;">
+        <button type="button" class="btn-gold-action focusable" id="btnOpenAdminMaster" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color:#fff; margin-bottom: 10px;">
+          👑 فتح لوحة تحكم الأدمن الشاملة
+        </button>
+      </div>
+
+      <!-- تفعيل كود التجديد -->
+      <form id="renewSubscriptionForm">
+        <input class="gold-input focusable" id="renewCodeInput" placeholder="ENTER CODE (XXXX-XXXX)" style="text-transform:uppercase; letter-spacing:2px; font-weight:bold; text-align:center;" required>
+        <button type="submit" class="btn-gold-action focusable">RENEW NOW</button>
+      </form>
+
+      <button type="button" class="focusable" id="btnCloseSettings" style="margin-top: 14px; background:transparent; border:none; color:var(--text-muted); cursor:pointer;">Close</button>
+    </div>
+  </div>
+
+  <!-- ==================== نافذة تسجيل الدخول برقم الاشتراك فقط (SINGLE NUMBER LOGIN) ==================== -->
+  <div class="pop-modal-overlay" id="loginModal" style="display: none;">
+    <div class="pop-modal-box">
+      <div style="font-size: 2.4rem; margin-bottom: 8px;">🦁</div>
+      <h2 style="color: var(--gold-primary); margin-bottom: 6px;">Q8 VIP ULTRA</h2>
+      <p style="color: var(--text-muted); margin-bottom: 22px;">ادخل رقم الاشتراك الخاص بك (أرقام فقط):</p>
+
+      <form id="userLoginForm">
+        <input class="gold-input focusable" id="loginUsername" type="number" inputmode="numeric" placeholder="رقم الاشتراك (مثال: 100100)" style="font-size:1.35rem; font-weight:bold; text-align:center; letter-spacing:2px; height:54px;" required autocomplete="username">
+        
+        <!-- حقل كلمة المرور اختياري (يستخدم فقط إذا دخل الأدمن 888888) -->
+        <div id="adminPassRow" style="display: none; margin-bottom: 14px;">
+          <input class="gold-input focusable" id="loginPassword" type="password" inputmode="numeric" placeholder="PIN الأدمن (للإدارة فقط)" style="text-align:center; font-size:1.1rem;">
+        </div>
+
+        <button type="submit" class="btn-gold-action focusable" style="height: 50px;">دخول الآن</button>
+      </form>
+
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 18px;">
+        ليس لديك اشتراك؟ تواصل مع الإدارة للحصول على رقم التفعيل
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== نافذة تحكم الأدمن الشاملة داخل التطبيق (ADMIN MASTER MODAL) ==================== -->
+  <div class="pop-modal-overlay" id="adminControlModal" style="display: none;">
+    <div class="pop-modal-box" style="width: 720px; max-height: 90vh; overflow-y: auto; text-align: right; direction: rtl;">
+      <h2 style="color: var(--gold-primary); margin-bottom: 4px;">👑 لوحة تحكم الأدمن المدمجة</h2>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px;">إدارة المشتركين والقنوات مباشرة من شاشة التلفزيون</p>
+
+      <!-- إنشاء مشترك جديد -->
+      <div style="background: rgba(0,0,0,0.5); padding: 14px; border-radius: 12px; margin-bottom: 16px; border: 1px solid rgba(212,175,55,0.2);">
+        <h4 style="color: #fff; margin-bottom: 10px;">🔢 إنشاء رقم اشتراك جديد فوراً:</h4>
+        <form id="adminQuickGenForm" style="display: flex; gap: 8px;">
+          <input class="gold-input focusable" id="adminNewUserNum" placeholder="الرقم (فارغ للتوليد)" type="number" style="margin-bottom:0;">
+          <input class="gold-input focusable" id="adminNewDays" placeholder="الأيام" value="30" type="number" style="max-width:100px; margin-bottom:0;">
+          <button type="submit" class="btn-gold-action focusable" style="width: auto; padding: 10px 18px;">توليد</button>
+        </form>
+        <div id="adminGenResult" style="margin-top: 10px; font-weight: bold;"></div>
+      </div>
+
+      <!-- قائمة سريعة بآخر المشتركين -->
+      <h4 style="color: #fff; margin-bottom: 10px;">📋 قائمة المشتركين المسجلين:</h4>
+      <div id="adminUsersListContainer" style="max-height: 220px; overflow-y: auto; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 10px; margin-bottom: 16px; font-size: 0.95rem;">
+        جاري التحميل...
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button type="button" class="focusable btn-gold-action" id="btnAdminReloadAll" style="width: auto; padding: 10px 18px; background: #27ae60;">تحديث كل القنوات</button>
+        <button type="button" class="focusable" id="btnCloseAdminModal" style="background: rgba(255,255,255,0.1); border:none; color:#fff; padding:10px 22px; border-radius:10px; cursor:pointer;">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/tv.js"></script>
+</body>
+</html>

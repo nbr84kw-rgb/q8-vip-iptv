@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تسجيل الدخول - {site}</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="card auth-box">
+    <div class="tabs">
+      <button data-tab="login" class="active">تسجيل الدخول</button>
+      <button data-tab="register">حساب جديد</button>
+    </div>
+
+    <form id="loginForm">
+      <div class="field"><label>اسم المستخدم أو البريد</label><input name="username" dir="ltr" required autocomplete="username"></div>
+      <div class="field"><label>كلمة المرور</label><input name="password" type="password" dir="ltr" required autocomplete="current-password"></div>
+      <button class="btn primary" style="width:100%">دخول</button>
+    </form>
+
+    <form id="registerForm" hidden>
+      <div class="field"><label>اسم المستخدم</label><input name="username" dir="ltr" required pattern="[\w.\-]{3,24}" autocomplete="username"></div>
+      <div class="field"><label>البريد الإلكتروني</label><input name="email" type="email" dir="ltr" required autocomplete="email"></div>
+      <div class="field"><label>كلمة المرور (6 أحرف على الأقل)</label><input name="password" type="password" dir="ltr" required minlength="6" autocomplete="new-password"></div>
+      <button class="btn primary" style="width:100%">إنشاء الحساب</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script>
+(async () => {
+  const { user } = await initNav('login');
+  if (user) return (location.href = '/watch.html');
+
+  const tabs = document.querySelectorAll('.tabs button');
+  const forms = { login: loginForm, register: registerForm };
+  const show = (t) => {
+    tabs.forEach((b) => b.classList.toggle('active', b.dataset.tab === t));
+    Object.entries(forms).forEach(([k, f]) => (f.hidden = k !== t));
+  };
+  tabs.forEach((b) => (b.onclick = () => show(b.dataset.tab)));
+  if (new URLSearchParams(location.search).get('tab') === 'register') show('register');
+
+  const submit = (form, url) => form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button'); btn.disabled = true;
+    try {
+      await api(url, 'POST', Object.fromEntries(new FormData(form)));
+      location.href = '/watch.html';
+    } catch (err) { toast(err.message, 'err'); btn.disabled = false; }
+  });
+  submit(loginForm, '/api/auth/login');
+  submit(registerForm, '/api/auth/register');
+})();
+</script>
+</body>
+</html>
