@@ -1,65 +1,435 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{site} - بث مباشر</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-<section class="hero">
-  <div class="container">
-    <h1>شاهد قنواتك المفضلة <span>بجودة عالية</span><br>في أي وقت ومن أي جهاز</h1>
-    <p>منصة بث مباشر مرتبة حسب الفئات، تعمل على الجوال والكمبيوتر والتلفزيون الذكي مباشرة من المتصفح.</p>
-    <div class="actions" id="heroActions"></div>
-  </div>
-</section>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Q8 VIP IPTV — بث مباشر وأفلام ومسلسلات</title>
+  <meta name="theme-color" content="#07080b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Q8 VIP IPTV">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
 
-<section class="section">
-  <div class="container">
-    <h2>لماذا تختارنا؟</h2>
-    <div class="grid f3">
-      <div class="card feature"><div class="ico">⚡</div><h3>بث سريع</h3><p>تشغيل فوري بتقنية HLS مع مشغّل خفيف.</p></div>
-      <div class="card feature"><div class="ico">🗂️</div><h3>قنوات مرتبة</h3><p>تصفّح القنوات حسب الفئة: أخبار، رياضة، أفلام، أطفال وغيرها.</p></div>
-      <div class="card feature"><div class="ico">📱</div><h3>على كل الأجهزة</h3><p>تصميم متجاوب يعمل على الجوال والتابلت والكمبيوتر.</p></div>
-      <div class="card feature"><div class="ico">🔒</div><h3>حساب آمن</h3><p>لوحة خاصة بك لإدارة اشتراكك وتفعيل الأكواد.</p></div>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Manrope:wght@400;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Tailwind & Kingly Styles -->
+  <link rel="stylesheet" href="/css/kingly.css">
+  <link rel="stylesheet" href="/css/kingly-app.css">
+
+  <!-- HLS Player CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+</head>
+<body class="bg-[#07080b] text-slate-100 min-h-screen selection:bg-amber-400 selection:text-black">
+
+  <!-- Background Wallpaper & Vignette -->
+  <img src="/img/hero-bg.jpg" alt="" class="bg-hero-wallpaper">
+  <div class="bg-radial-vignette"></div>
+
+  <!-- 1. Splash Screen -->
+  <div id="splashScreen">
+    <div class="relative flex flex-col items-center gap-4 text-center z-10">
+      <img src="/img/king-logo.png" alt="Q8 VIP IPTV" class="h-44 w-44 object-contain king-logo-animated">
+      <h1 class="text-3xl font-extrabold text-gold-gradient tracking-wider">Q8 VIP IPTV</h1>
+      <p class="text-xs tracking-[0.3em] text-gold uppercase opacity-90">v4.3 VIP King Edition</p>
     </div>
   </div>
-</section>
 
-<section class="section" id="plans">
-  <div class="container">
-    <h2>الباقات</h2>
-    <div class="grid f3" id="plansGrid"></div>
+  <!-- 2. Auth / Activation Screen -->
+  <div id="authContainer" class="relative z-10 min-h-screen flex flex-col justify-center items-center px-4 py-8" style="display: none;">
+    <!-- Language Switcher -->
+    <div class="w-full max-w-md flex justify-end mb-4">
+      <button id="langToggleBtn" onclick="toggleLang()" class="btn-ghost-gold text-xs py-1.5 px-3 rounded-full tv-focusable">
+        English
+      </button>
+    </div>
+
+    <!-- Activation Card -->
+    <div class="w-full max-w-md text-center">
+      <img src="/img/king-logo.png" alt="Q8 VIP IPTV" class="mx-auto h-24 w-24 object-contain drop-shadow-2xl">
+      <h1 class="mt-3 text-3xl font-black text-gold-gradient" data-i18n="appName">Q8 VIP IPTV</h1>
+      <p class="mt-1 text-xs text-muted" data-i18n="tagline">بوابتك الملكية للبث المباشر والأفلام والمسلسلات</p>
+
+      <form onsubmit="handleLogin(event)" class="panel-lux mt-6 p-6 sm:p-8 rounded-3xl text-start">
+        <label for="activationInput" class="block text-xs font-bold text-slate-300 mb-2" data-i18n="activationCode">
+          كود التفعيل / رقم الاشتراك
+        </label>
+        
+        <input
+          id="activationInput"
+          type="text"
+          dir="ltr"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          placeholder="000000"
+          autocomplete="off"
+          class="w-full text-center text-2xl font-black tracking-[0.25em] bg-black/60 border border-gold/30 rounded-2xl py-3 px-4 text-amber-300 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/40 transition-all tv-focusable"
+        >
+
+        <p class="text-center text-[11px] text-muted mt-2" data-i18n="codeHint">
+          أدخل كود الاشتراك الرقمي المكون من أرقام فقط
+        </p>
+
+        <!-- TV Virtual Number Pad -->
+        <div class="num-pad">
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('1')">1</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('2')">2</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('3')">3</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('4')">4</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('5')">5</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('6')">6</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('7')">7</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('8')">8</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('9')">9</button>
+          <button type="button" class="num-btn tv-focusable text-red-400" onclick="numPadClick('CLEAR')">C</button>
+          <button type="button" class="num-btn tv-focusable" onclick="numPadClick('0')">0</button>
+          <button type="button" class="num-btn tv-focusable text-amber-400" onclick="numPadClick('DEL')">⌫</button>
+        </div>
+
+        <!-- Quick Demo Codes for Testing -->
+        <div class="mt-4 flex flex-wrap gap-2 justify-center text-[11px]">
+          <button type="button" onclick="quickFillCode('100100')" class="btn-ghost-gold py-1 px-2 text-[10px] tv-focusable">
+            ⚡ تجربة: 100100
+          </button>
+          <button type="button" onclick="quickFillCode('888888')" class="btn-ghost-gold py-1 px-2 text-[10px] tv-focusable">
+            👑 المدير: 888888
+          </button>
+        </div>
+
+        <button id="loginSubmitBtn" type="submit" class="btn-gold w-full mt-5 py-3.5 text-base tv-focusable">
+          <span class="text-lg">🔑</span>
+          <span data-i18n="enter">دخول</span>
+        </button>
+      </form>
+
+      <p class="mt-5 text-center text-[11px] text-muted flex items-center justify-center gap-1.5">
+        <span class="text-gold">🛡️</span>
+        <span data-i18n="codeFooter">اشتراك آمن ومحمي بأعلى معايير الجودة</span>
+      </p>
+    </div>
   </div>
-</section>
 
-<footer>© <span id="year"></span> <span id="siteName"></span> — جميع الحقوق محفوظة</footer>
+  <!-- 3. Authenticated Media Hub App -->
+  <div id="appContainer" class="relative z-10 min-h-screen flex flex-col" style="display: none;">
+    <!-- Main Top Header -->
+    <header class="sticky top-0 z-40 border-b border-white/10 bg-[#07080b]/90 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 sm:px-6">
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3 cursor-pointer tv-focusable" onclick="switchView('home')">
+          <img src="/img/king-logo.png" alt="Q8 VIP IPTV" class="h-10 w-10 object-contain">
+          <div>
+            <h1 class="text-lg sm:text-xl font-black text-gold-gradient" data-i18n="appName">Q8 VIP IPTV</h1>
+            <p class="text-[10px] text-muted hidden sm:block" data-i18n="tagline">بوابتك الملكية للبث المباشر والأفلام والمسلسلات</p>
+          </div>
+        </div>
 
-<script src="/js/common.js"></script>
-<script>
-(async () => {
-  const { cfg, user } = await initNav('home');
-  document.getElementById('year').textContent = new Date().getFullYear();
-  document.getElementById('siteName').textContent = cfg.siteName;
-  document.getElementById('heroActions').innerHTML = user
-    ? '<a class="btn primary" href="/watch.html">▶ ابدأ المشاهدة</a>'
-    : `<a class="btn primary" href="/login.html?tab=register">${cfg.trialDays > 0 ? `جرّب مجاناً ${cfg.trialDays} يوم` : 'سجّل الآن'}</a><a class="btn ghost" href="#plans">الباقات</a>`;
+        <!-- Top Actions -->
+        <div class="flex items-center gap-2">
+          <button onclick="switchView('live')" title="Live TV" class="btn-ghost-gold p-2 text-sm tv-focusable">
+            📺 <span class="hidden md:inline ms-1" data-i18n="live">بث مباشر</span>
+          </button>
+          <button onclick="switchView('favorites')" title="Favorites" class="btn-ghost-gold p-2 text-sm tv-focusable">
+            ⭐ <span class="hidden md:inline ms-1" data-i18n="favorites">المفضلة</span>
+          </button>
+          <button id="navAdminBtn" onclick="openAdminModal()" title="Admin" class="btn-ghost-gold p-2 text-sm tv-focusable" style="display: none;">
+            👑 <span class="hidden md:inline ms-1" data-i18n="admin">الإدارة</span>
+          </button>
+          <button onclick="switchView('settings')" title="Settings" class="btn-ghost-gold p-2 text-sm tv-focusable">
+            ⚙️ <span class="hidden md:inline ms-1" data-i18n="settings">الإعدادات</span>
+          </button>
+          <button onclick="toggleLang()" class="btn-ghost-gold px-2.5 py-1 text-xs font-bold text-gold tv-focusable">
+            🌐
+          </button>
+          <button onclick="logout()" title="Logout" class="btn-ghost-gold p-2 text-red-400 hover:text-red-300 border-red-900/40 tv-focusable">
+            🚪
+          </button>
+        </div>
+      </div>
+    </header>
 
-  const plans = await api('/api/plans');
-  const buy = cfg.contactUrl
-    ? `<a class="btn primary" target="_blank" rel="noopener" href="${esc(cfg.contactUrl)}">اشترك الآن</a>`
-    : `<a class="btn primary" href="${user ? '/account.html' : '/login.html?tab=register'}">اشترك الآن</a>`;
-  document.getElementById('plansGrid').innerHTML = plans.map((p) => `
-    <div class="card plan">
-      <h3>${esc(p.name)}</h3>
-      <div class="price">${esc(p.price)} <small>ر.س</small></div>
-      <p>${esc(p.description)}<br><small>مدة الاشتراك: ${p.days} يوم</small></p>
-      ${buy}
-    </div>`).join('') || '<p class="empty">لا توجد باقات حالياً</p>';
-})();
-</script>
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 sm:px-6">
+
+      <!-- ================= VIEW 1: HOME HUB ================= -->
+      <section id="view-home" class="view-page space-y-8">
+        <!-- Hero Banner -->
+        <div class="panel-lux relative overflow-hidden rounded-3xl p-6 sm:p-10 border border-gold/30">
+          <div class="relative z-10 max-w-xl space-y-3">
+            <h1 class="text-3xl sm:text-5xl font-black text-gold-gradient" data-i18n="appName">Q8 VIP IPTV</h1>
+            <p class="text-xs sm:text-sm text-slate-300" data-i18n="tagline">بوابتك الملكية للبث المباشر والأفلام والمسلسلات</p>
+            <div id="subBadge" class="pt-2"></div>
+          </div>
+        </div>
+
+        <!-- 6 Main Hub Tiles (Directly replicating Lovable home) -->
+        <div>
+          <h2 class="text-sm font-bold text-gold uppercase tracking-wider mb-3">الأقسام الملكية (VIP Hub)</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            <!-- 1. Live TV -->
+            <div onclick="switchView('live')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+              <span class="text-3xl mb-2">📺</span>
+              <span class="text-sm font-bold text-white" data-i18n="live">بث مباشر</span>
+              <span class="text-[10px] text-gold mt-1">340+ قناة</span>
+            </div>
+
+            <!-- 2. Movies -->
+            <div onclick="switchView('movies')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+              <span class="text-3xl mb-2">🎬</span>
+              <span class="text-sm font-bold text-white" data-i18n="movies">أفلام</span>
+              <span class="text-[10px] text-gold mt-1">سينما VIP</span>
+            </div>
+
+            <!-- 3. Series -->
+            <div onclick="switchView('series')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+              <span class="text-3xl mb-2">🍿</span>
+              <span class="text-sm font-bold text-white" data-i18n="series">مسلسلات</span>
+              <span class="text-[10px] text-gold mt-1">مواسم كاملة</span>
+            </div>
+
+            <!-- 4. Kids -->
+            <div onclick="switchView('kids')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+              <span class="text-3xl mb-2">🧸</span>
+              <span class="text-sm font-bold text-white" data-i18n="kids">أطفال</span>
+              <span class="text-[10px] text-gold mt-1">كرتون وترفيه</span>
+            </div>
+
+            <!-- 5. Favorites -->
+            <div onclick="switchView('favorites')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+              <span class="text-3xl mb-2">⭐</span>
+              <span class="text-sm font-bold text-white" data-i18n="favorites">المفضلة</span>
+              <span class="text-[10px] text-gold mt-1">قنواتي المفضلة</span>
+            </div>
+
+            <!-- 6. Search -->
+            <div onclick="switchView('live')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+              <span class="text-3xl mb-2">🔍</span>
+              <span class="text-sm font-bold text-white" data-i18n="search">البحث</span>
+              <span class="text-[10px] text-gold mt-1">بحث فوري</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Continue Watching Row -->
+        <div id="continueWatchingSection" style="display: none;">
+          <h2 class="text-sm font-bold text-gold uppercase tracking-wider mb-3" data-i18n="continueWatching">أكمل المشاهدة</h2>
+          <div id="continueWatchingGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3"></div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 2: LIVE TV ================= -->
+      <section id="view-live" class="view-page space-y-4" style="display: none;">
+        <!-- Top Toolbar -->
+        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('home')" class="btn-ghost-gold py-1.5 px-3 text-xs tv-focusable">
+              ◀ <span data-i18n="back">رجوع</span>
+            </button>
+            <h2 class="text-lg font-black text-gold-gradient" data-i18n="live">بث مباشر</h2>
+          </div>
+          <!-- Channel Search -->
+          <div class="relative flex-1 max-w-md">
+            <input
+              id="channelSearchInput"
+              type="text"
+              placeholder="ابحث عن قناة..."
+              data-i18n-ph="searchChannels"
+              class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold transition-all tv-focusable"
+            >
+          </div>
+        </div>
+
+        <!-- Category Horizontal Pills -->
+        <div id="categoryPills" class="flex gap-2 overflow-x-auto pb-2 scrollbar-none"></div>
+
+        <!-- Channels Grid -->
+        <div id="channelsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+      </section>
+
+      <!-- ================= VIEW 3: MOVIES ================= -->
+      <section id="view-movies" class="view-page space-y-4" style="display: none;">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('home')" class="btn-ghost-gold py-1.5 px-3 text-xs tv-focusable">◀ <span data-i18n="back">رجوع</span></button>
+            <h2 class="text-lg font-black text-gold-gradient" data-i18n="movies">أفلام VIP</h2>
+          </div>
+        </div>
+        <div class="panel-lux p-8 rounded-2xl text-center space-y-3">
+          <span class="text-5xl">🎬</span>
+          <h3 class="text-xl font-bold text-white">مكتبة الأفلام الملكية (VIP Cinema)</h3>
+          <p class="text-xs text-muted max-w-md mx-auto">أحدث الأفلام العربية والأجنبية بجودة 4K و FHD مع ترجمة احترافية.</p>
+          <button onclick="switchView('live')" class="btn-gold text-xs py-2 px-4 tv-focusable">تصفح قنوات الأفلام المباشرة</button>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 4: SERIES ================= -->
+      <section id="view-series" class="view-page space-y-4" style="display: none;">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('home')" class="btn-ghost-gold py-1.5 px-3 text-xs tv-focusable">◀ <span data-i18n="back">رجوع</span></button>
+            <h2 class="text-lg font-black text-gold-gradient" data-i18n="series">مسلسلات VIP</h2>
+          </div>
+        </div>
+        <div class="panel-lux p-8 rounded-2xl text-center space-y-3">
+          <span class="text-5xl">🍿</span>
+          <h3 class="text-xl font-bold text-white">مسلسلات حصرية كاملة المواسم</h3>
+          <p class="text-xs text-muted max-w-md mx-auto">مسلسلات كويتية، خليجية، مصرية، تركية، وعالمية متجددة يومياً.</p>
+          <button onclick="switchView('live')" class="btn-gold text-xs py-2 px-4 tv-focusable">تصفح قنوات المسلسلات المباشرة</button>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 5: KIDS ================= -->
+      <section id="view-kids" class="view-page space-y-4" style="display: none;">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('home')" class="btn-ghost-gold py-1.5 px-3 text-xs tv-focusable">◀ <span data-i18n="back">رجوع</span></button>
+            <h2 class="text-lg font-black text-gold-gradient" data-i18n="kids">عالم الأطفال</h2>
+          </div>
+        </div>
+        <div class="panel-lux p-8 rounded-2xl text-center space-y-3">
+          <span class="text-5xl">🧸</span>
+          <h3 class="text-xl font-bold text-white">قنوات وكرتون الأطفال (Kids Zone)</h3>
+          <p class="text-xs text-muted max-w-md mx-auto">محتوى آمن وممتع للأطفال يشمل أشهر قنوات الكرتون وأفلام ديزني وسبيستون.</p>
+          <button onclick="selectCategory('5'); switchView('live')" class="btn-gold text-xs py-2 px-4 tv-focusable">مشاهدة قنوات الأطفال الآن</button>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 6: FAVORITES ================= -->
+      <section id="view-favorites" class="view-page space-y-4" style="display: none;">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('home')" class="btn-ghost-gold py-1.5 px-3 text-xs tv-focusable">◀ <span data-i18n="back">رجوع</span></button>
+            <h2 class="text-lg font-black text-gold-gradient" data-i18n="favorites">القنوات المفضلة</h2>
+          </div>
+        </div>
+        <div id="favoritesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4"></div>
+      </section>
+
+      <!-- ================= VIEW 7: SETTINGS ================= -->
+      <section id="view-settings" class="view-page space-y-4" style="display: none;">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <button onclick="switchView('home')" class="btn-ghost-gold py-1.5 px-3 text-xs tv-focusable">◀ <span data-i18n="back">رجوع</span></button>
+            <h2 class="text-lg font-black text-gold-gradient" data-i18n="settings">إعدادات الحساب والاشتراك</h2>
+          </div>
+        </div>
+        <div class="panel-lux max-w-xl mx-auto p-6 sm:p-8 rounded-3xl space-y-6">
+          <div class="flex items-center gap-4 border-b border-border/40 pb-4">
+            <img src="/img/king-logo.png" alt="" class="h-16 w-16 object-contain">
+            <div>
+              <h3 class="text-xl font-black text-gold">Q8 VIP IPTV Pro</h3>
+              <p class="text-xs text-muted">منصة البث الملكية للتلفزيون الذكي والهاتف</p>
+            </div>
+          </div>
+          <div id="settingsUserBox"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Bar for Mobile / TV -->
+    <footer class="border-t border-white/5 py-4 text-center text-[11px] text-muted">
+      © <span id="copyrightYear">2026</span> Q8 VIP IPTV Pro — جميع الحقوق محفوظة · <span class="text-gold font-mono">v4.3 VIP King Edition</span>
+    </footer>
+  </div>
+
+  <!-- 4. Video Player Overlay -->
+  <div id="playerOverlay" class="fixed inset-0 z-50 bg-black/95 flex flex-col justify-center items-center" style="display: none;">
+    <div id="playerWrapper" class="relative w-full h-full max-w-6xl max-h-[85vh] bg-black flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/10 video-container show-osd">
+      
+      <!-- Video Element -->
+      <video id="videoElement" controls autoplay playsinline class="w-full h-full object-contain bg-black"></video>
+
+      <!-- Player OSD Overlay Header -->
+      <div class="absolute top-0 inset-x-0 p-4 bg-gradient-to-b from-black/80 to-transparent flex items-center justify-between z-20">
+        <div class="flex items-center gap-3">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+          <span class="text-xs font-bold text-red-500 uppercase tracking-wider">مباشر · LIVE</span>
+          <span id="playerChannelTitle" class="text-base sm:text-lg font-bold text-white"></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="reloadCurrentStream()" class="btn-ghost-gold p-2 text-xs tv-focusable" title="Reload">🔄</button>
+          <button onclick="togglePlayerFullscreen()" class="btn-ghost-gold p-2 text-xs tv-focusable" title="Fullscreen">⛶</button>
+          <button onclick="closePlayer()" class="btn-ghost-gold p-2 text-xs text-red-400 border-red-900/40 tv-focusable" title="Close">✕</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. Admin Management Modal -->
+  <div id="adminModal" class="modal-overlay">
+    <div class="panel-lux modal-card p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between border-b border-border/40 pb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">👑</span>
+          <div>
+            <h3 class="text-xl font-black text-gold">لوحة الإدارة الملكية (Master Admin)</h3>
+            <p class="text-xs text-muted">إدارة المشتركين وتوليد الأكواد والقنوات</p>
+          </div>
+        </div>
+        <button onclick="closeAdminModal()" class="btn-ghost-gold py-1 px-3 text-xs tv-focusable">✕ إغلاق</button>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="panel-lux p-3 rounded-xl text-center">
+          <div class="text-xl font-bold text-emerald-400" id="statActiveUsers">0</div>
+          <div class="text-[11px] text-muted">مشتركون نشطون</div>
+        </div>
+        <div class="panel-lux p-3 rounded-xl text-center">
+          <div class="text-xl font-bold text-white" id="statTotalUsers">0</div>
+          <div class="text-[11px] text-muted">إجمالي الحسابات</div>
+        </div>
+        <div class="panel-lux p-3 rounded-xl text-center">
+          <div class="text-xl font-bold text-gold" id="statChannels">0</div>
+          <div class="text-[11px] text-muted">إجمالي القنوات</div>
+        </div>
+        <div class="panel-lux p-3 rounded-xl text-center">
+          <div class="text-xl font-bold text-amber-400" id="statFreeCodes">0</div>
+          <div class="text-[11px] text-muted">أكواد غير مفعلة</div>
+        </div>
+      </div>
+
+      <!-- Quick Generator Buttons -->
+      <div>
+        <h4 class="text-xs font-bold text-gold uppercase tracking-wider mb-2">توليد اشتراك رقمي فوري (مشترك بدون باسورد):</h4>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="createNumericSubscriber(30)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم شهر (30 يوم)</button>
+          <button onclick="createNumericSubscriber(90)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم 3 شهور</button>
+          <button onclick="createNumericSubscriber(180)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم 6 شهور</button>
+          <button onclick="createNumericSubscriber(365)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم سنة كاملة (365 يوم)</button>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gold uppercase tracking-wider mb-2">توليد أكواد تفعيل (Activation Codes):</h4>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="generateNewCode(3)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">تجربة (3 أيام)</button>
+          <button onclick="generateNewCode(30)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">شهر (30 يوم)</button>
+          <button onclick="generateNewCode(90)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">3 شهور</button>
+          <button onclick="generateNewCode(365)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">سنة (365 يوم)</button>
+        </div>
+      </div>
+
+      <!-- Lists -->
+      <div class="space-y-4">
+        <div>
+          <h4 class="text-xs font-bold text-white mb-2">آخر الأكواد المولدة:</h4>
+          <div id="adminCodesList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-white mb-2">المشتركون المسجلون:</h4>
+          <div id="adminUsersList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Script -->
+  <script src="/js/kingly-app.js"></script>
 </body>
 </html>

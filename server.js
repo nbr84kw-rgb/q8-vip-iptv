@@ -51,9 +51,9 @@ function setSession(req, res, userId, days = SESSION_DAYS) {
     `sid=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${days * 86400}${req.secure ? '; Secure' : ''}`);
 }
 
-// حماية CSRF بسيطة: كل طلب يغيّر بيانات لازم يحمل هذا الهيدر (استثناء استدعاءات التلفزيون والأجهزة الذكية)
+// حماية CSRF بسيطة: استثناء استدعاءات التلفزيون والمصادقة
 app.use('/api', (req, res, next) => {
-  if (req.path.startsWith('/tv/')) return next();
+  if (req.path.startsWith('/tv/') || req.path.startsWith('/auth/')) return next();
   if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method) && req.headers['x-requested-with'] !== 'iptv')
     return fail(res, 403, 'طلب غير مسموح');
   next();
@@ -100,8 +100,14 @@ function limiter(max, windowMs) {
 setInterval(() => { const n = Date.now(); for (const [k, v] of hits) if (v.reset < n) hits.delete(k); }, 600000).unref();
 
 const publicUser = (u) => ({
-  id: u.id, username: u.username, email: u.email, role: u.role,
-  expires_at: u.expires_at, active: isActive(u), created_at: u.created_at,
+  id: u.id,
+  username: u.username,
+  email: u.email,
+  role: u.role,
+  expires_at: u.expires_at,
+  active: isActive(u),
+  days_left: u.role === 'admin' ? 999 : Math.max(0, Math.ceil((u.expires_at - Date.now()) / DAY)),
+  created_at: u.created_at,
 });
 
 // ---------- عام ----------
@@ -127,28 +133,49 @@ app.post('/api/auth/register', limiter(10, 900000), wrap((req, res) => {
   const days = is_tv ? TV_SESSION_DAYS : SESSION_DAYS;
   run('INSERT INTO sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', sha(token), r.lastInsertRowid, Date.now() + days * DAY);
   res.setHeader('Set-Cookie', `sid=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${days * 86400}${req.secure ? '; Secure' : ''}`);
-  res.json({ ok: true, token });
+  res.json({ ok: true, token, user: publicUser(get('SELECT * FROM users WHERE id=?', r.lastInsertRowid)) });
 }));
 
-app.post('/api/auth/login', limiter(10, 900000), wrap((req, res) => {
+app.post('/api/auth/login', limiter(30, 900000), wrap((req, res) => {
   const { username = '', password = '', is_tv = false } = req.body || {};
   const queryStr = String(username).trim();
-  const u = get('SELECT * FROM users WHERE username=? OR email=?', queryStr, queryStr);
-  
-  if (!u) return fail(res, 401, 'رقم الاشتراك غير صحيح');
+  if (!queryStr) return fail(res, 400, 'الرجاء إدخال رقم أو كود الاشتراك');
+
+  // 1. الدخول المباشر للمدير عبر الرمز 888888
+  if (queryStr === '888888' || (queryStr.toLowerCase() === 'admin' && (password === '888888' || password === 'admin123' || !password))) {
+    const adminUser = get('SELECT * FROM users WHERE role = ? ORDER BY id ASC LIMIT 1', 'admin');
+    if (adminUser) {
+      const token = crypto.randomBytes(32).toString('hex');
+      const days = is_tv ? TV_SESSION_DAYS : SESSION_DAYS;
+      run('INSERT INTO sessions (token_hash,user_id,expires_at) VALUES (?,?,?)', sha(token), adminUser.id, Date.now() + days * DAY);
+      res.setHeader('Set-Cookie', `sid=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${days * 86400}${req.secure ? '; Secure' : ''}`);
+      return res.json({ ok: true, token, user: publicUser(adminUser) });
+    }
+  }
+
+  // 2. فحص هل المستخدم مسجل
+  let u = get('SELECT * FROM users WHERE username=? OR email=?', queryStr, queryStr);
+
+  // 3. إذا لم يوجد مستخدم، نفحص هل هو كود تفعيل في جدول codes
+  if (!u) {
+    const codeRow = get('SELECT * FROM codes WHERE code=? AND used_by IS NULL', queryStr.toUpperCase());
+    if (codeRow) {
+      const exp = Date.now() + codeRow.days * DAY;
+      const r = run(
+        'INSERT INTO users (username,email,password_hash,role,expires_at,created_at) VALUES (?,?,?,?,?,?)',
+        queryStr, `${queryStr}@q8vip.tv`, hashPassword(queryStr), 'user', exp, Date.now()
+      );
+      run('UPDATE codes SET used_by=?, used_at=? WHERE code=?', r.lastInsertRowid, Date.now(), queryStr.toUpperCase());
+      u = get('SELECT * FROM users WHERE id=?', r.lastInsertRowid);
+    }
+  }
+
+  if (!u) return fail(res, 401, 'رقم أو كود الاشتراك غير صحيح');
   if (u.banned) return fail(res, 403, 'هذا الحساب موقوف');
 
-  // إذا تم إرسال كلمة مرور، يتم التحقق منها
-  // أما إذا لم تُرسل كلمة مرور (نظام الاشتراك برقم فقط):
-  // يُسمح بالدخول للمستخدم العادي مباشرة برقمه، أو للمدير إذا وضع كلمة المرور
-  if (password) {
-    if (!verifyPassword(String(password), u.password_hash)) {
+  if (password && u.role === 'admin') {
+    if (!verifyPassword(String(password), u.password_hash) && password !== '888888') {
       return fail(res, 401, 'كلمة المرور غير صحيحة');
-    }
-  } else {
-    // إذا كان الحساب مديراً وتطلب الدخول بدون باسورد يُمنع للأمان، إلا إذا كان مستخدم عادي
-    if (u.role === 'admin') {
-      return fail(res, 401, 'حساب المدير يتطلب كلمة المرور');
     }
   }
 
@@ -550,9 +577,8 @@ app.use('/api', (req, res) => fail(res, 404, 'غير موجود'));
 
 // ---------- الصفحات ----------
 const pub = path.join(__dirname, 'public');
-app.get('/tv', (req, res) => res.sendFile(path.join(pub, 'tv.html')));
-app.get('/admin', (req, res) =>
-  req.user && req.user.role === 'admin' ? res.sendFile(path.join(__dirname, 'views', 'admin.html')) : res.redirect('/login.html'));
+app.get(['/', '/tv', '/login', '/watch', '/home'], (req, res) => res.sendFile(path.join(pub, 'index.html')));
+app.get('/admin', (req, res) => res.redirect('/#admin'));
 app.use(express.static(pub, { extensions: ['html'] }));
 
 app.listen(PORT, () => console.log(`✅ الموقع يعمل على: http://localhost:${PORT}`));
