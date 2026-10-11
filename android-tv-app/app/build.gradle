@@ -15,7 +15,7 @@ android {
 
         // الرابط الافتراضي لسيرفر المنصة على الإنترنت
         manifestPlaceholders = [
-            defaultServerUrl: "http://10.0.2.2:3100" // أو رابط السيرفر الأونلاين
+            defaultServerUrl: "https://q8-vip-iptv2.onrender.com/tv"
         ]
     }
 
