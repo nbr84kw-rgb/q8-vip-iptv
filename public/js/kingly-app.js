@@ -1,11 +1,12 @@
 /**
- * Q8 VIP IPTV Pro - Kingly Luxury Web & Smart TV Application
- * Replicating https://kingly-media-hub.lovable.app
+ * Q8 VIP IPTV 2.0 — نسخة التلفزيون الاحترافية
+ * Smart TV 3-Zone Engine, Remote D-Pad Navigation & Unified UI
  */
 
 const I18N = {
   ar: {
     appName: "Q8 VIP IPTV",
+    version: "v2.0.0 Pro TV Edition",
     tagline: "بوابتك الملكية للبث المباشر والأفلام والمسلسلات",
     activationCode: "كود التفعيل / رقم الاشتراك",
     codeHint: "أدخل كود الاشتراك الرقمي المكون من أرقام فقط",
@@ -26,35 +27,27 @@ const I18N = {
     expiresAt: "ينتهي في",
     remainingDays: "الأيام المتبقية",
     channelsCount: "قناة",
-    searchPlaceholder: "ابحث عن قناة أو فيلم أو مسلسل...",
+    searchPlaceholder: "ابحث عن قناة...",
     searchChannels: "ابحث عن قناة...",
     allCategories: "كل التصنيفات",
     play: "تشغيل",
     trial: "تجربة مجانية",
     vipPlan: "باقة VIP الملكية",
     logout: "تسجيل الخروج",
-    version: "v4.3 VIP King Edition",
     copy: "نسخ",
     copied: "تم النسخ!",
-    generateCode: "توليد كود تفعيل",
-    activeSubscribers: "المشتركون النشطون",
-    totalStreams: "إجمالي القنوات",
-    addChannel: "إضافة قناة",
-    importM3U: "استيراد ملف M3U",
-    noResults: "لا توجد نتائج مطابقة",
-    back: "رجوع",
-    days: "يوم",
     quality: "الجودة",
     autoQuality: "تلقائي",
-    probeSuccess: "تم الاتصال بنجاح!",
-    probeFailed: "فشل الاتصال بالمصدر",
-    syncSuccess: "تمت المزامنة بنجاح!",
-    hide: "إخفاء",
-    unhide: "إظهار",
-    hidden: "مخفية"
+    fullscreen: "ملء الشاشة",
+    reload: "إعادة تحميل",
+    nowPlaying: "قيد التشغيل الآن",
+    noResults: "لا توجد قنوات مطابقة",
+    back: "رجوع",
+    days: "يوم"
   },
   en: {
     appName: "Q8 VIP IPTV",
+    version: "v2.0.0 Pro TV Edition",
     tagline: "Your royal gateway to live streaming and cinema",
     activationCode: "Activation Code / Subscriber ID",
     codeHint: "Enter your numeric activation code",
@@ -75,32 +68,23 @@ const I18N = {
     expiresAt: "Expires at",
     remainingDays: "Days Left",
     channelsCount: "channels",
-    searchPlaceholder: "Search channels, movies, series...",
+    searchPlaceholder: "Search channels...",
     searchChannels: "Search channels...",
     allCategories: "All Categories",
     play: "Play",
     trial: "Free Trial",
     vipPlan: "VIP Royal Plan",
     logout: "Log Out",
-    version: "v4.3 VIP King Edition",
     copy: "Copy",
     copied: "Copied!",
-    generateCode: "Generate Code",
-    activeSubscribers: "Active Subscribers",
-    totalStreams: "Total Streams",
-    addChannel: "Add Channel",
-    importM3U: "Import M3U",
-    noResults: "No results found",
-    back: "Back",
-    days: "days",
     quality: "Quality",
     autoQuality: "Auto",
-    probeSuccess: "Connected successfully!",
-    probeFailed: "Connection probe failed",
-    syncSuccess: "Synced successfully!",
-    hide: "Hide",
-    unhide: "Show",
-    hidden: "Hidden"
+    fullscreen: "Fullscreen",
+    reload: "Reload",
+    nowPlaying: "Now Playing",
+    noResults: "No channels found",
+    back: "Back",
+    days: "days"
   }
 };
 
@@ -115,6 +99,7 @@ let currentView = 'home';
 let favorites = JSON.parse(localStorage.getItem('kingvip_favs') || '[]');
 let watchHistory = JSON.parse(localStorage.getItem('kingvip_history') || '[]');
 let currentAdminTab = 'codes';
+let isSearchInputActive = false;
 
 function t(key) {
   return I18N[currentLang]?.[key] || key;
@@ -135,10 +120,8 @@ function updateDirection() {
       el.setAttribute('placeholder', I18N[currentLang][key]);
     }
   });
-  const langToggleBtn = document.getElementById('langToggleBtn');
-  if (langToggleBtn) {
-    langToggleBtn.textContent = currentLang === 'ar' ? 'English' : 'العربية';
-  }
+  const langBtn = document.getElementById('langToggleBtn');
+  if (langBtn) langBtn.textContent = currentLang === 'ar' ? 'English' : 'العربية';
 }
 
 function toggleLang() {
@@ -173,10 +156,10 @@ function showToast(msg, isError = false) {
     toast.id = 'toast';
     toast.style.cssText = `
       position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-      background: rgba(15, 18, 25, 0.95); border: 1px solid var(--gold-primary);
-      color: #fff; padding: 12px 24px; border-radius: 999px; font-weight: 700;
-      font-size: 14px; z-index: 100000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      transition: all 0.3s ease; opacity: 0; pointer-events: none;
+      background: rgba(12, 16, 24, 0.96); border: 2px solid var(--gold-primary);
+      color: #fff; padding: 12px 26px; border-radius: 999px; font-weight: 800;
+      font-size: 14px; z-index: 100000; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transition: all 0.25s ease; opacity: 0; pointer-events: none;
     `;
     document.body.appendChild(toast);
   }
@@ -187,22 +170,22 @@ function showToast(msg, isError = false) {
   setTimeout(() => {
     toast.style.opacity = '0';
     toast.style.transform = 'translateX(-50%) translateY(-10px)';
-  }, 3000);
+  }, 2500);
 }
 
 // ---------------- Init App ----------------
 window.addEventListener('DOMContentLoaded', async () => {
   updateDirection();
-  setupEventListeners();
+  setupSpatialRemoteEngine();
 
   // Hide splash after 1.5s
   setTimeout(() => {
     const splash = document.getElementById('splashScreen');
     if (splash) {
       splash.classList.add('fade-out');
-      setTimeout(() => splash.remove(), 600);
+      setTimeout(() => splash.remove(), 500);
     }
-  }, 1500);
+  }, 1400);
 
   // Check login state
   try {
@@ -222,14 +205,12 @@ function showLogin() {
   document.getElementById('authContainer').style.display = 'flex';
   document.getElementById('appContainer').style.display = 'none';
   const input = document.getElementById('activationInput');
-  if (input) {
-    input.focus();
-  }
+  if (input) setFocusedElement(input);
 }
 
 function showApp() {
   document.getElementById('authContainer').style.display = 'none';
-  document.getElementById('appContainer').style.display = 'block';
+  document.getElementById('appContainer').style.display = 'flex';
   renderUserInfo();
   loadData();
   switchView('home');
@@ -237,33 +218,33 @@ function showApp() {
 
 function renderUserInfo() {
   if (!currentUser) return;
-  const adminBtn = document.getElementById('navAdminBtn');
   const isAdmin = currentUser.role === 'admin' || currentUser.username === '65555165' || currentUser.username === '888888';
-  if (adminBtn) {
-    adminBtn.style.display = isAdmin ? 'flex' : 'none';
-  }
+  
+  // Admin button in rail
+  const adminRailBtn = document.getElementById('railAdminBtn');
+  if (adminRailBtn) adminRailBtn.style.display = isAdmin ? 'flex' : 'none';
 
   // Feature gate checks
   const feats = currentUser.features || { live: true, movies: true, series: true, kids: true };
-  const navLive = document.getElementById('navLiveBtn');
-  const navMovies = document.getElementById('navMoviesBtn');
-  const navSeries = document.getElementById('navSeriesBtn');
-  const navKids = document.getElementById('navKidsBtn');
+  const railLive = document.getElementById('railLiveBtn');
+  const railMovies = document.getElementById('railMoviesBtn');
+  const railSeries = document.getElementById('railSeriesBtn');
+  const railKids = document.getElementById('railKidsBtn');
   const tileLive = document.getElementById('tileLive');
   const tileMovies = document.getElementById('tileMovies');
   const tileSeries = document.getElementById('tileSeries');
   const tileKids = document.getElementById('tileKids');
 
-  if (navLive) navLive.style.display = (feats.live !== false) ? 'flex' : 'none';
+  if (railLive) railLive.style.display = (feats.live !== false) ? 'flex' : 'none';
   if (tileLive) tileLive.style.display = (feats.live !== false) ? 'flex' : 'none';
 
-  if (navMovies) navMovies.style.display = (feats.movies !== false) ? 'flex' : 'none';
+  if (railMovies) railMovies.style.display = (feats.movies !== false) ? 'flex' : 'none';
   if (tileMovies) tileMovies.style.display = (feats.movies !== false) ? 'flex' : 'none';
 
-  if (navSeries) navSeries.style.display = (feats.series !== false) ? 'flex' : 'none';
+  if (railSeries) railSeries.style.display = (feats.series !== false) ? 'flex' : 'none';
   if (tileSeries) tileSeries.style.display = (feats.series !== false) ? 'flex' : 'none';
 
-  if (navKids) navKids.style.display = (feats.kids !== false) ? 'flex' : 'none';
+  if (railKids) railKids.style.display = (feats.kids !== false) ? 'flex' : 'none';
   if (tileKids) tileKids.style.display = (feats.kids !== false) ? 'flex' : 'none';
 
   renderSubscriptionBadge();
@@ -276,7 +257,7 @@ function renderSubscriptionBadge() {
   const isExp = !currentUser.active;
   const isAdmin = currentUser.role === 'admin' || currentUser.username === '65555165' || currentUser.username === '888888';
   badge.innerHTML = `
-    <div class="panel-lux flex flex-wrap items-center gap-2 sm:gap-3 px-4 py-2 rounded-xl text-xs font-bold text-gold">
+    <div class="panel-lux flex flex-wrap items-center gap-2 sm:gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-gold">
       <span>👑 ${isAdmin ? 'Master Admin' : t('vipPlan')}</span>
       <span class="opacity-40">|</span>
       <span>${isExp ? t('subscriptionExpired') : t('expiresAt')} ${expDate}</span>
@@ -363,26 +344,36 @@ async function loadData() {
     categoriesList = cats || [];
     channelsList = chans || [];
     renderCategories();
-    renderChannels();
+    renderChannelsList();
     renderContinueWatching();
+
+    // Auto-select first channel in player preview if available
+    if (channelsList.length > 0 && !currentChannel) {
+      selectChannelPreview(channelsList[0], false);
+    }
   } catch (e) {
     console.error('Error loading data:', e);
   }
 }
 
 function renderCategories() {
-  const container = document.getElementById('categoryPills');
+  const container = document.getElementById('tvCategoryList');
   if (!container) return;
+  
   let html = `
-    <button class="cat-pill tv-focusable ${currentCategory === 'all' ? 'active' : ''}" onclick="selectCategory('all')">
-      ⭐ ${t('allCategories')} (${channelsList.length})
-    </button>
+    <div class="tv-cat-item tv-focusable ${currentCategory === 'all' ? 'active' : ''}" 
+         data-zone="cats" onclick="selectCategory('all')" tabindex="0">
+      <span>⭐ ${t('allCategories')}</span>
+      <span class="text-[11px] opacity-70">${channelsList.length}</span>
+    </div>
   `;
   categoriesList.forEach(c => {
     html += `
-      <button class="cat-pill tv-focusable ${currentCategory === String(c.id) ? 'active' : ''}" onclick="selectCategory('${c.id}')">
-        ${c.name} (${c.count || 0})
-      </button>
+      <div class="tv-cat-item tv-focusable ${currentCategory === String(c.id) ? 'active' : ''}" 
+           data-zone="cats" onclick="selectCategory('${c.id}')" tabindex="0">
+        <span>${c.name}</span>
+        <span class="text-[11px] opacity-70">${c.count || 0}</span>
+      </div>
     `;
   });
   container.innerHTML = html;
@@ -391,11 +382,11 @@ function renderCategories() {
 function selectCategory(id) {
   currentCategory = id;
   renderCategories();
-  renderChannels();
+  renderChannelsList();
 }
 
-function renderChannels() {
-  const container = document.getElementById('channelsGrid');
+function renderChannelsList() {
+  const container = document.getElementById('tvChannelsList');
   if (!container) return;
   const searchVal = (document.getElementById('channelSearchInput')?.value || '').toLowerCase().trim();
   
@@ -408,19 +399,22 @@ function renderChannels() {
   }
 
   if (list.length === 0) {
-    container.innerHTML = `<div class="col-span-full py-12 text-center text-muted">${t('noResults')}</div>`;
+    container.innerHTML = `<div class="p-8 text-center text-xs text-muted">${t('noResults')}</div>`;
     return;
   }
 
-  container.innerHTML = list.map(c => {
+  container.innerHTML = list.map((c, idx) => {
+    const isPlaying = currentChannel && currentChannel.id === c.id;
     const isFav = favorites.includes(c.id);
-    const logo = c.logo || '/img/king-logo.png';
+    const num = String(idx + 1).padStart(2, '0');
     return `
-      <div class="media-card tv-focusable" onclick="playChannel(${c.id})" tabindex="0">
-        <span class="card-badge">VIP HD</span>
-        <img src="${logo}" alt="${c.name}" onerror="this.src='/img/king-logo.png'">
-        <div class="card-name">${c.name}</div>
-        <button class="absolute bottom-2 left-2 text-xs opacity-75 hover:opacity-100" onclick="toggleFavorite(event, ${c.id})">
+      <div class="tv-channel-item tv-focusable ${isPlaying ? 'now-playing' : ''}" 
+           data-zone="channels" onclick="onChannelClick(${c.id})" tabindex="0">
+        <span class="tv-channel-num">#${num}</span>
+        <img src="${c.logo || '/img/king-logo.png'}" class="tv-channel-logo" alt="" onerror="this.src='/img/king-logo.png'">
+        <span class="tv-channel-title">${c.name}</span>
+        ${isPlaying ? '<span class="text-xs animate-pulse text-gold">▶</span>' : ''}
+        <button class="text-xs p-1 text-muted hover:text-gold" onclick="toggleFavorite(event, ${c.id})">
           ${isFav ? '⭐' : '☆'}
         </button>
       </div>
@@ -428,24 +422,40 @@ function renderChannels() {
   }).join('');
 }
 
-// ---------------- Video Player with Quality Control ----------------
-function playChannel(id) {
-  const channel = channelsList.find(c => c.id === id);
-  if (!channel) return;
+function onChannelClick(id) {
+  const ch = channelsList.find(c => c.id === id);
+  if (!ch) return;
+  // If already playing this channel, open fullscreen!
+  if (currentChannel && currentChannel.id === ch.id) {
+    openFullscreenPlayer();
+  } else {
+    selectChannelPreview(ch, true);
+  }
+}
+
+// ---------------- Video Player Preview & Fullscreen ----------------
+function selectChannelPreview(channel, autoPlay = true) {
   currentChannel = channel;
+  renderChannelsList();
+
+  // Update Now Playing Info Box
+  const titleEl = document.getElementById('tvPlayerTitle');
+  const catEl = document.getElementById('tvPlayerCat');
+  const logoEl = document.getElementById('tvPlayerLogo');
+  const catName = categoriesList.find(c => c.id === channel.category_id)?.name || 'عام';
+
+  if (titleEl) titleEl.textContent = channel.name;
+  if (catEl) catEl.textContent = catName;
+  if (logoEl) logoEl.src = channel.logo || '/img/king-logo.png';
 
   // Add to watch history
   watchHistory = [channel, ...watchHistory.filter(h => h.id !== channel.id)].slice(0, 10);
   localStorage.setItem('kingvip_history', JSON.stringify(watchHistory));
   renderContinueWatching();
 
-  const playerOverlay = document.getElementById('playerOverlay');
-  const video = document.getElementById('videoElement');
-  const title = document.getElementById('playerChannelTitle');
-  if (title) title.textContent = channel.name;
+  const video = document.getElementById('tvEmbeddedVideo');
+  if (!video) return;
 
-  playerOverlay.style.display = 'flex';
-  
   const qualitySelect = document.getElementById('playerQualitySelect');
   if (qualitySelect) qualitySelect.innerHTML = `<option value="-1">${t('autoQuality')}</option>`;
 
@@ -460,12 +470,11 @@ function playChannel(id) {
     hlsPlayer.attachMedia(video);
 
     hlsPlayer.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-      video.play();
+      if (autoPlay) video.play().catch(() => {});
       if (qualitySelect && data.levels && data.levels.length > 1) {
         qualitySelect.innerHTML = `<option value="-1">${t('autoQuality')}</option>`;
         data.levels.forEach((lvl, idx) => {
-          const h = lvl.height || 'HD';
-          qualitySelect.innerHTML += `<option value="${idx}">${h}p</option>`;
+          qualitySelect.innerHTML += `<option value="${idx}">${lvl.height || 'HD'}p</option>`;
         });
       }
     });
@@ -487,39 +496,30 @@ function playChannel(id) {
     });
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = channel.url;
-    video.play();
+    if (autoPlay) video.play().catch(() => {});
   }
 }
 
-function setPlayerQuality(lvlIndex) {
-  if (hlsPlayer) {
-    hlsPlayer.currentLevel = Number(lvlIndex);
-    showToast(lvlIndex === '-1' ? 'جودة تلقائية (Auto)' : `تم ضبط الجودة`);
-  }
-}
-
-function closePlayer() {
-  const playerOverlay = document.getElementById('playerOverlay');
-  const video = document.getElementById('videoElement');
-  if (video) video.pause();
-  if (hlsPlayer) {
-    hlsPlayer.destroy();
-    hlsPlayer = null;
-  }
-  playerOverlay.style.display = 'none';
-}
-
-function togglePlayerFullscreen() {
-  const el = document.getElementById('playerWrapper');
-  if (!document.fullscreenElement) {
-    el.requestFullscreen?.().catch(() => {});
-  } else {
-    document.exitFullscreen?.().catch(() => {});
+function openFullscreenPlayer() {
+  const wrapper = document.getElementById('tvEmbeddedVideoWrapper');
+  if (wrapper) {
+    if (!document.fullscreenElement) {
+      wrapper.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.().catch(() => {});
+    }
   }
 }
 
 function reloadCurrentStream() {
-  if (currentChannel) playChannel(currentChannel.id);
+  if (currentChannel) selectChannelPreview(currentChannel, true);
+}
+
+function setPlayerQuality(lvl) {
+  if (hlsPlayer) {
+    hlsPlayer.currentLevel = Number(lvl);
+    showToast(lvl === '-1' ? 'جودة تلقائية (Auto)' : 'تم ضبط الجودة');
+  }
 }
 
 // ---------------- Favorites ----------------
@@ -533,7 +533,7 @@ function toggleFavorite(e, id) {
     showToast(currentLang === 'ar' ? 'تمت الإضافة للمفضلة' : 'Added to Favorites');
   }
   localStorage.setItem('kingvip_favs', JSON.stringify(favorites));
-  renderChannels();
+  renderChannelsList();
   if (currentView === 'favorites') renderFavoritesView();
 }
 
@@ -546,12 +546,20 @@ function renderFavoritesView() {
     return;
   }
   container.innerHTML = favChannels.map(c => `
-    <div class="media-card tv-focusable" onclick="playChannel(${c.id})">
+    <div class="media-card tv-focusable" data-zone="hub" onclick="selectChannelPreviewAndSwitch(${c.id})">
       <span class="card-badge">VIP HD</span>
       <img src="${c.logo || '/img/king-logo.png'}" alt="${c.name}" onerror="this.src='/img/king-logo.png'">
       <div class="card-name">${c.name}</div>
     </div>
   `).join('');
+}
+
+function selectChannelPreviewAndSwitch(id) {
+  const ch = channelsList.find(c => c.id === id);
+  if (ch) {
+    switchView('live');
+    selectChannelPreview(ch, true);
+  }
 }
 
 // ---------------- Continue Watching ----------------
@@ -566,7 +574,7 @@ function renderContinueWatching() {
   }
   section.style.display = 'block';
   container.innerHTML = watchHistory.slice(0, 6).map(c => `
-    <div class="media-card tv-focusable" onclick="playChannel(${c.id})">
+    <div class="media-card tv-focusable" data-zone="hub" onclick="selectChannelPreviewAndSwitch(${c.id})">
       <span class="card-badge">▶</span>
       <img src="${c.logo || '/img/king-logo.png'}" alt="${c.name}" onerror="this.src='/img/king-logo.png'">
       <div class="card-name">${c.name}</div>
@@ -574,7 +582,7 @@ function renderContinueWatching() {
   `).join('');
 }
 
-// ---------------- Navigation / View Switching ----------------
+// ---------------- View Switching ----------------
 function switchView(viewName) {
   currentView = viewName;
   document.querySelectorAll('.view-page').forEach(v => v.style.display = 'none');
@@ -583,13 +591,24 @@ function switchView(viewName) {
     target.style.display = 'block';
   }
 
-  document.querySelectorAll('.nav-btn').forEach(btn => {
+  // Active state on rail items
+  document.querySelectorAll('.tv-nav-item').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
   });
 
   if (viewName === 'favorites') renderFavoritesView();
   if (viewName === 'settings') renderSettingsView();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Set initial focus in newly active view
+  setTimeout(() => {
+    if (viewName === 'live') {
+      const firstCat = document.querySelector('.tv-cat-item.active') || document.querySelector('.tv-cat-item');
+      if (firstCat) setFocusedElement(firstCat);
+    } else if (viewName === 'home') {
+      const firstTile = document.querySelector('#view-home .tv-focusable');
+      if (firstTile) setFocusedElement(firstTile);
+    }
+  }, 100);
 }
 
 function renderSettingsView() {
@@ -622,7 +641,7 @@ function renderSettingsView() {
   `;
 }
 
-// ---------------- Admin Panel & Tabs ----------------
+// ---------------- Admin Panel Tabs & Handlers ----------------
 function openAdminModal() {
   const modal = document.getElementById('adminModal');
   if (modal) {
@@ -665,7 +684,6 @@ async function loadAdminStats() {
   } catch (e) {}
 }
 
-// Tab 1: Codes
 async function loadAdminCodes() {
   const listEl = document.getElementById('adminCodesList');
   if (!listEl) return;
@@ -746,7 +764,6 @@ async function createNumericSubscriber(days) {
   }
 }
 
-// Tab 2: Users
 async function loadAdminUsers() {
   const listEl = document.getElementById('adminUsersList');
   if (!listEl) return;
@@ -799,7 +816,7 @@ async function toggleUserStatus(id, banned) {
   } catch (e) {}
 }
 
-// Tab 3: Sources (Shared Xtream & M3U)
+// Tab 3: Sources
 async function loadAdminSources() {
   const listEl = document.getElementById('adminSourcesList');
   if (!listEl) return;
@@ -826,7 +843,6 @@ async function loadAdminSources() {
           <span>القنوات: <b class="text-white">${s.live_count || 0}</b></span>
           <span>الأفلام: <b class="text-white">${s.vod_count || 0}</b></span>
           <span>المسلسلات: <b class="text-white">${s.series_count || 0}</b></span>
-          <span>الحالة: <b class="${s.active ? 'text-emerald-400' : 'text-red-400'}">${s.active ? 'نشط' : 'معطل'}</b></span>
         </div>
       </div>
     `).join('');
@@ -856,8 +872,8 @@ async function probeNewSource() {
     if (res.ok) {
       probeStatus.innerHTML = `
         <div class="p-3 rounded-lg bg-emerald-950/60 border border-emerald-700 text-xs text-emerald-300 space-y-1">
-          <div class="font-bold">✅ تم الاتصال بالسيرفر بنجاح!</div>
-          <div>بث مباشر: <b>${res.live_count}</b> قناة | أفلام: <b>${res.vod_count}</b> | مسلسلات: <b>${res.series_count}</b></div>
+          <div class="font-bold">✅ تم الاتصال بنجاح!</div>
+          <div>بث مباشر: <b>${res.live_count}</b> | أفلام: <b>${res.vod_count}</b> | مسلسلات: <b>${res.series_count}</b></div>
         </div>
       `;
     } else {
@@ -916,7 +932,7 @@ async function syncSource(id) {
 }
 
 async function deleteSource(id) {
-  if (!confirm('هل تريد بالتأكيد حذف هذا المصدر وقنواته؟')) return;
+  if (!confirm('هل تريد حذف هذا المصدر وقنواته؟')) return;
   try {
     await api(`/api/admin/sources/${id}`, { method: 'DELETE' });
     showToast('تم حذف المصدر');
@@ -925,7 +941,7 @@ async function deleteSource(id) {
   } catch (e) {}
 }
 
-// Tab 4: Channel Hiding (hidden_channels)
+// Tab 4: Channel Hiding
 async function loadAdminChannelsWithHidden() {
   const listEl = document.getElementById('adminChannelsWithHiddenList');
   if (!listEl) return;
@@ -951,77 +967,167 @@ async function toggleChannelHide(channelId) {
   try {
     const res = await api(`/api/admin/channels/${channelId}/toggle-hide`, { method: 'POST' });
     if (res.ok) {
-      showToast(res.hidden ? 'تم إخفاء القناة عن المستخدمين' : 'تم إظهار القناة للمستخدمين');
+      showToast(res.hidden ? 'تم إخفاء القناة' : 'تم إظهار القناة');
       loadAdminChannelsWithHidden();
       loadData();
     }
   } catch (e) {}
 }
 
-// ---------------- Smart TV D-Pad Remote Navigation ----------------
-let focusedElement = null;
+// ---------------- Smart TV 3-Zone Spatial Remote Engine ----------------
+let currentFocusedEl = null;
 
-function setupEventListeners() {
+function setFocusedElement(el) {
+  if (!el) return;
+  if (currentFocusedEl) currentFocusedEl.classList.remove('tv-focused');
+  currentFocusedEl = el;
+  currentFocusedEl.classList.add('tv-focused');
+  if (currentFocusedEl.tagName !== 'INPUT') {
+    currentFocusedEl.focus();
+  }
+  currentFocusedEl.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+}
+
+function setupSpatialRemoteEngine() {
   window.addEventListener('keydown', (e) => {
-    const focusable = Array.from(document.querySelectorAll('.tv-focusable:not([disabled])')).filter(el => {
-      const style = window.getComputedStyle(el);
-      return style.display !== 'none' && style.visibility !== 'hidden' && el.offsetParent !== null;
-    });
-
-    if (focusable.length === 0) return;
-
-    if (!focusedElement || !focusable.includes(focusedElement)) {
-      focusedElement = focusable[0];
-      focusedElement.focus();
-      focusedElement.classList.add('tv-focused');
+    // If user is currently typing in an input field, let normal typing happen!
+    if (document.activeElement && document.activeElement.tagName === 'INPUT' && e.key !== 'Escape' && e.key !== 'ArrowDown' && e.key !== 'ArrowUp') {
+      return;
     }
 
-    const currentIndex = focusable.indexOf(focusedElement);
+    const isRtl = currentLang === 'ar';
 
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-      e.preventDefault();
-      let nextIndex = currentIndex;
-
-      if (e.key === 'ArrowRight') {
-        nextIndex = currentLang === 'ar' ? Math.max(0, currentIndex - 1) : Math.min(focusable.length - 1, currentIndex + 1);
-      } else if (e.key === 'ArrowLeft') {
-        nextIndex = currentLang === 'ar' ? Math.min(focusable.length - 1, currentIndex + 1) : Math.max(0, currentIndex - 1);
-      } else if (e.key === 'ArrowDown') {
-        nextIndex = Math.min(focusable.length - 1, currentIndex + 4);
-      } else if (e.key === 'ArrowUp') {
-        nextIndex = Math.max(0, currentIndex - 4);
-      }
-
-      if (focusable[nextIndex]) {
-        if (focusedElement) focusedElement.classList.remove('tv-focused');
-        focusedElement = focusable[nextIndex];
-        focusedElement.focus();
-        focusedElement.classList.add('tv-focused');
-        focusedElement.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
-      }
-    } else if (e.key === 'Enter') {
-      if (focusedElement && focusedElement.tagName !== 'INPUT' && focusedElement.tagName !== 'SELECT') {
-        focusedElement.click();
-      }
-    } else if (e.key === 'Backspace' || e.key === 'Escape') {
-      const playerOverlay = document.getElementById('playerOverlay');
-      if (playerOverlay && playerOverlay.style.display === 'flex') {
+    // 1. BACK / ESCAPE KEY
+    if (e.key === 'Backspace' || e.key === 'Escape') {
+      if (document.fullscreenElement) {
         e.preventDefault();
-        closePlayer();
-      } else if (document.getElementById('adminModal')?.classList.contains('active')) {
+        document.exitFullscreen?.().catch(() => {});
+        return;
+      }
+      if (document.getElementById('adminModal')?.classList.contains('active')) {
         e.preventDefault();
         closeAdminModal();
-      } else if (currentView !== 'home') {
+        return;
+      }
+      if (currentView !== 'home') {
         e.preventDefault();
         switchView('home');
+        return;
+      }
+    }
+
+    // 2. FULLSCREEN ARROW CONTROLS (Quick Channel Zapping)
+    if (document.fullscreenElement) {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (channelsList.length > 0 && currentChannel) {
+          const curIdx = channelsList.findIndex(c => c.id === currentChannel.id);
+          let nextIdx = e.key === 'ArrowDown' ? (curIdx + 1) % channelsList.length : (curIdx - 1 + channelsList.length) % channelsList.length;
+          selectChannelPreview(channelsList[nextIdx], true);
+          showToast(`قناة: ${channelsList[nextIdx].name}`);
+        }
+        return;
+      }
+    }
+
+    // 3. ARROW KEYS NAVIGATION
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      e.preventDefault();
+      handleSpatialMove(e.key, isRtl);
+      return;
+    }
+
+    // 4. ENTER / OK KEY
+    if (e.key === 'Enter') {
+      if (currentFocusedEl) {
+        if (currentFocusedEl.id === 'channelSearchButton') {
+          // Explicitly activate search input
+          const input = document.getElementById('channelSearchInput');
+          if (input) input.focus();
+        } else if (currentFocusedEl.tagName !== 'INPUT') {
+          currentFocusedEl.click();
+        }
       }
     }
   });
 
+  // Search input live filtering
   document.getElementById('channelSearchInput')?.addEventListener('input', () => {
-    renderChannels();
+    renderChannelsList();
   });
   document.getElementById('adminChannelSearchInput')?.addEventListener('input', () => {
     loadAdminChannelsWithHidden();
   });
+}
+
+function handleSpatialMove(key, isRtl) {
+  if (!currentFocusedEl) {
+    const first = document.querySelector('.tv-focusable');
+    if (first) setFocusedElement(first);
+    return;
+  }
+
+  const currentZone = currentFocusedEl.getAttribute('data-zone') || 'hub';
+
+  // Zone Transitions on Left/Right
+  if (key === 'ArrowLeft' || key === 'ArrowRight') {
+    const isForward = isRtl ? (key === 'ArrowLeft') : (key === 'ArrowRight');
+
+    if (currentView === 'live') {
+      if (isForward) {
+        // Nav -> Cats -> Channels -> Player
+        if (currentZone === 'nav') {
+          const target = document.querySelector('.tv-cat-item.active') || document.querySelector('.tv-cat-item');
+          if (target) return setFocusedElement(target);
+        } else if (currentZone === 'cats') {
+          const target = document.querySelector('.tv-channel-item.now-playing') || document.querySelector('.tv-channel-item');
+          if (target) return setFocusedElement(target);
+        } else if (currentZone === 'channels') {
+          const target = document.querySelector('[data-zone="player"].tv-focusable');
+          if (target) return setFocusedElement(target);
+        }
+      } else {
+        // Player -> Channels -> Cats -> Nav
+        if (currentZone === 'player') {
+          const target = document.querySelector('.tv-channel-item.now-playing') || document.querySelector('.tv-channel-item');
+          if (target) return setFocusedElement(target);
+        } else if (currentZone === 'channels') {
+          const target = document.querySelector('.tv-cat-item.active') || document.querySelector('.tv-cat-item');
+          if (target) return setFocusedElement(target);
+        } else if (currentZone === 'cats') {
+          const target = document.querySelector('.tv-nav-item.active') || document.querySelector('.tv-nav-item');
+          if (target) return setFocusedElement(target);
+        }
+      }
+    } else {
+      // General view (Home / Settings): Nav <-> Content
+      if (isForward && currentZone === 'nav') {
+        const target = document.querySelector(`#view-${currentView} .tv-focusable`);
+        if (target) return setFocusedElement(target);
+      } else if (!isForward && currentZone !== 'nav') {
+        const target = document.querySelector('.tv-nav-item.active') || document.querySelector('.tv-nav-item');
+        if (target) return setFocusedElement(target);
+      }
+    }
+  }
+
+  // Vertical Navigation (Up / Down) within current zone or grid
+  const zoneElements = Array.from(document.querySelectorAll(`[data-zone="${currentZone}"]:not([disabled])`))
+    .filter(el => el.offsetParent !== null);
+
+  if (zoneElements.length <= 1) return;
+
+  const idx = zoneElements.indexOf(currentFocusedEl);
+  if (idx === -1) return;
+
+  let nextIdx = idx;
+  if (key === 'ArrowDown') {
+    nextIdx = (idx + 1) % zoneElements.length;
+  } else if (key === 'ArrowUp') {
+    nextIdx = (idx - 1 + zoneElements.length) % zoneElements.length;
+  }
+
+  if (zoneElements[nextIdx]) {
+    setFocusedElement(zoneElements[nextIdx]);
+  }
 }
