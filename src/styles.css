@@ -1,0 +1,161 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Q8 VIP IPTV design system — deep navy & electric cyan, TV-first.
+ * All colors are oklch semantic tokens. Never hardcode colors in components.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+   --font-display: "Cairo", "Sora", system-ui, sans-serif;
+   --font-sans: "Cairo", "Manrope", system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-deep: var(--gold-deep);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root,
+.dark {
+  --radius: 0.5rem;
+  --background: oklch(0.18 0.035 252);
+  --foreground: oklch(0.98 0.008 235);
+  --card: oklch(0.26 0.055 246);
+  --card-foreground: oklch(0.98 0.008 235);
+  --popover: oklch(0.23 0.05 248);
+  --popover-foreground: oklch(0.98 0.008 235);
+
+  --gold: oklch(0.79 0.145 210);
+  --gold-soft: oklch(0.9 0.075 210);
+  --gold-deep: oklch(0.65 0.13 220);
+
+  --primary: oklch(0.79 0.145 210);
+  --primary-foreground: oklch(0.16 0.035 252);
+  --secondary: oklch(0.31 0.06 244);
+  --secondary-foreground: oklch(0.96 0.012 230);
+  --muted: oklch(0.29 0.045 246);
+  --muted-foreground: oklch(0.76 0.035 235);
+  --accent: oklch(0.35 0.075 232);
+  --accent-foreground: oklch(0.9 0.075 210);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --success: oklch(0.72 0.16 150);
+  --border: oklch(0.58 0.075 225 / 35%);
+  --input: oklch(0.34 0.06 242);
+  --ring: oklch(0.79 0.145 210);
+
+  --sidebar: oklch(0.145 0.032 252);
+  --sidebar-foreground: oklch(0.98 0.008 235);
+  --sidebar-primary: oklch(0.79 0.145 210);
+  --sidebar-primary-foreground: oklch(0.16 0.035 252);
+  --sidebar-accent: oklch(0.31 0.065 240);
+  --sidebar-accent-foreground: oklch(0.9 0.075 210);
+  --sidebar-border: oklch(0.58 0.075 225 / 30%);
+  --sidebar-ring: oklch(0.79 0.145 210);
+
+  --gradient-gold: linear-gradient(135deg, var(--gold-deep), var(--gold-soft) 55%, var(--gold-deep));
+  --gradient-panel: linear-gradient(160deg, oklch(0.3 0.065 244 / 92%), oklch(0.17 0.035 252 / 96%));
+  --shadow-gold: 0 12px 40px -12px oklch(0.79 0.145 210 / 38%);
+  --shadow-panel: 0 18px 44px -28px oklch(0.05 0.025 250 / 92%);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+  }
+}
+
+@utility text-gold-gradient {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility panel-lux {
+   background: var(--card);
+  border: 1px solid var(--color-border);
+}
+
+@utility gold-glow {
+  box-shadow: var(--shadow-gold);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* TV remote focus */
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-gold, currentColor);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 5px color-mix(in oklab, var(--color-gold) 18%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

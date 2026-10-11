@@ -1,33 +1,26 @@
-# ⭐ Q8 VIP IPTV Pro - المنصة والتطبيق التلفزيوني الشامل
+# King VIP IPTV
 
-منصة IPTV احترافية متكاملة تدعم:
-- **تطبيق التلفزيون المخصص (Android TV / Google TV / Fire TV / Web Smart TVs)** مع تحكم كامل بالريموت كنترول.
-- **نظام الربط السريع (Quick TV Pairing)** بكود مكون من 6 خانات أو مسح QR من الجوال بدون الحاجة لكتابة كلمات المرور على الشاشة.
-- **لوحة إدارة متطورة وموقع رئيسي** مع نظام اشتراكات وأكواد وتصنيف القنوات.
+ابي اسوي تطبيق IPTV يكون اسمه KING VIP IPTV ويكون فيه عربي انجليزي ويكون في اقدر اسوي  اشتراكات ولوحات تحكم خاصه فيني وتكون وجهت التطبيق حديثه ومطوره ويكون فيه دراك مود
 
----
+This project was built with [Lovable](https://lovable.dev).
 
-## 📺 تشغيل واجهة التلفزيون الذكي:
-- عبر المتصفح في أي شاشة ذكية: `http://your-server-ip:3000/tv`
-- تطبيق Android TV الكامل المدمج في المجلد: `android-tv-app` (جاهز للتجميع كـ APK).
+**Live app**: https://kingly-media-hub.lovable.app
 
-| المتغير | الوصف | الافتراضي |
-|---|---|---|
-| `PORT` | المنفذ | 3000 |
-| `SITE_NAME` | اسم الموقع | IPTV Pro |
-| `CONTACT_URL` | رابط واتساب/تيليجرام لزر "اشترك" | — |
-| `TRIAL_DAYS` | أيام التجربة المجانية للمسجلين الجدد | 1 |
-| `ADMIN_USER` / `ADMIN_PASS` | حساب المدير عند أول تشغيل | admin / admin123 |
-| `NODE_ENV=production` | يفعّل Secure cookie (يتطلب HTTPS) | — |
+## Build with Lovable
 
-## الصفحات
-- `/` الرئيسية والباقات · `/login.html` دخول/تسجيل · `/watch.html` المشغّل · `/account.html` حسابي · `/admin` لوحة التحكم
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/1755bfeb-2d9b-4669-ae4c-507d610a5b24).
 
-## طريقة البيع
-المدير يولّد أكواد اشتراك من لوحة التحكم ← يبيعها للعميل ← العميل يفعّلها من "حسابي".
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
-## ملاحظات مهمة
-- غيّر كلمة مرور المدير فوراً.
-- روابط البث يجب أن تدعم CORS ليشغّلها المتصفح، وإذا موقعك HTTPS فروابط البث لازم HTTPS أيضاً.
-- استخدم فقط محتوى تملك حقوق بثه أو مرخّص لك.
-- قاعدة البيانات في `data/iptv.db`.
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+```sh
+git clone <this-repository-url>
+cd <repository-name>
+npm i
+npm run dev
+```

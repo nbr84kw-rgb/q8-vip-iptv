@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="app.q8vip.iptv" android:versionCode="15" android:versionName="1.5.0">
+<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-feature android:name="android.software.leanback" android:required="false"/>
+<uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+<application android:label="Q8 VIP IPTV" android:icon="@mipmap/ic_launcher" android:banner="@drawable/banner" android:usesCleartextTraffic="true" android:hardwareAccelerated="true" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+<activity android:name=".MainActivity" android:exported="true" android:screenOrientation="sensorLandscape" android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation|uiMode">
+<intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/><category android:name="android.intent.category.LEANBACK_LAUNCHER"/></intent-filter>
+</activity></application></manifest>
