@@ -672,6 +672,29 @@ function callLayer(fn, event, handler, inner) {
 function isUnhandledResponse(val) {
 	return val === void 0 || val === kNotFound;
 }
+function toMiddleware(input) {
+	let h = input.handler || input;
+	let isFunction = typeof h === "function";
+	if (!isFunction && typeof input?.fetch === "function") {
+		isFunction = true;
+		h = function _fetchHandler(event) {
+			return input.fetch(event.req);
+		};
+	}
+	if (!isFunction) return function noopMiddleware(event, next) {
+		return next();
+	};
+	if (h.length === 2) return h;
+	return function _middlewareHandler(event, next) {
+		const res = h(event);
+		return typeof res?.then === "function" ? res.then((r) => {
+			return is404(r) ? next() : r;
+		}) : is404(res) ? next() : res;
+	};
+}
+function is404(val) {
+	return isUnhandledResponse(val) || val?.status === 404 && val instanceof Response;
+}
 //#endregion
 //#region node_modules/h3/dist/cache.mjs
 function toRequest(input, options) {
@@ -788,4 +811,4 @@ function routeHandler(route) {
 	return data.middleware?.length ? data["~composed"] ??= composeHandler(data.middleware, data.handler) : data.handler;
 }
 //#endregion
-export { toRequest as a, toEventHandler as i, defineHandler as n, HTTPError as o, defineLazyEventHandler as r, H3Core as t };
+export { toRequest as a, HTTPError as c, toEventHandler as i, defineHandler as n, callMiddleware as o, defineLazyEventHandler as r, toMiddleware as s, H3Core as t };

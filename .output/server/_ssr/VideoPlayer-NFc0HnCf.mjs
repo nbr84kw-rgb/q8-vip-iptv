@@ -1,4 +1,4 @@
-import { i as __toESM } from "../_runtime.mjs";
+import { r as __toESM } from "../_runtime.mjs";
 import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
 import { i as require_jsx_runtime } from "../_libs/@radix-ui/react-label+[...].mjs";
 import { t as Button } from "./button-D6YE5GE3.mjs";
@@ -102,7 +102,7 @@ function VideoPlayer({ url, alt, raw, rawAlt, onProgress, autoFullscreen, onPlay
 		};
 		const onVideoError = () => next();
 		video.addEventListener("error", onVideoError);
-		if (current.engine === "hls" && !video.canPlayType("application/vnd.apple.mpegurl")) import("../_libs/hls.js.mjs").then((n) => n.t).then(({ default: Hls }) => {
+		if (current.engine === "hls" && !video.canPlayType("application/vnd.apple.mpegurl")) import("../_libs/_2.mjs").then(({ default: Hls }) => {
 			if (cancelled || !videoRef.current) return;
 			if (!Hls.isSupported()) return next();
 			const hls = new Hls({
@@ -131,7 +131,7 @@ function VideoPlayer({ url, alt, raw, rawAlt, onProgress, autoFullscreen, onPlay
 			hls.attachMedia(videoRef.current);
 			cleanup = () => hls.destroy();
 		}).catch(next);
-		else if (current.engine === "mpegts") import("../_libs/mpegts.js.mjs").then((n) => /* @__PURE__ */ __toESM(n.t(), 1)).then((mod) => {
+		else if (current.engine === "mpegts") import("../_libs/_3.mjs").then((m) => /* @__PURE__ */ __toESM(m.default, 1)).then((mod) => {
 			const mpegts = mod.default ?? mod;
 			if (cancelled || !videoRef.current) return;
 			if (!mpegts.getFeatureList().mseLivePlayback) return next();

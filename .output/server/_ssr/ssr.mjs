@@ -1,4 +1,4 @@
-import { n as __exportAll } from "../_runtime.mjs";
+import "../_runtime.mjs";
 import { n as toResponse, t as H3Event } from "../_libs/h3-v2+rou3+srvx.mjs";
 import { t as createCsrfMiddleware } from "./createCsrfMiddleware-BazWLCnL.mjs";
 import { n as require_react } from "../_libs/@radix-ui/react-compose-refs+[...].mjs";
@@ -7,15 +7,6 @@ import { n as createServerHistory } from "../_libs/tanstack__history.mjs";
 import { a as defaultSerovalDeserializerPlugins, i as createRawStreamRPCPlugin, n as attachRouterServerSsrUtils, o as makeSerovalPlugin, r as getNormalizedURL, s as createSerializationAdapter, t as mergeHeaders } from "../_libs/@tanstack/router-core+[...].mjs";
 import { i as require_jsx_runtime } from "../_libs/@radix-ui/react-label+[...].mjs";
 import { AsyncLocalStorage } from "node:async_hooks";
-//#region node_modules/.nitro/vite/services/ssr/index.mjs
-var ssr_exports = /* @__PURE__ */ __exportAll({
-	createServerEntry: () => createServerEntry,
-	default: () => server_default,
-	i: () => getRequest,
-	n: () => TSS_SERVER_FUNCTION,
-	r: () => getServerFnById,
-	t: () => createServerFn
-});
 require_react();
 var import_jsx_runtime = require_jsx_runtime();
 function StartServer(props) {
@@ -1979,4 +1970,4 @@ function createServerEntry(entry) {
 }
 var server_default = createServerEntry({ fetch });
 //#endregion
-export { ssr_exports as a, getServerFnById as i, createServerFn as n, getRequest as r, TSS_SERVER_FUNCTION as t };
+export { getServerFnById as a, getRequest as i, createServerEntry as n, server_default as o, createServerFn as r, TSS_SERVER_FUNCTION as t };

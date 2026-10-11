@@ -1,5 +1,5 @@
 import { n as createMiddleware } from "./createCsrfMiddleware-BazWLCnL.mjs";
-import { r as getRequest } from "./ssr.mjs";
+import { i as getRequest } from "./ssr.mjs";
 import { t as createClient } from "../_libs/supabase__supabase-js.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/auth-middleware-D6ZRGAVH.mjs
 function isNewSupabaseApiKey(value) {
