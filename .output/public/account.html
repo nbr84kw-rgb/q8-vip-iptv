@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حسابي - {site}</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container account">
+  <div class="card">
+    <div class="sub-status">
+      <div>
+        <div style="color:var(--muted)">حالة الاشتراك</div>
+        <div class="big" id="status">...</div>
+        <div id="expiry" style="color:var(--muted)"></div>
+      </div>
+      <a class="btn primary" href="/watch.html">▶ شاهد الآن</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:14px">🎟️ تفعيل كود اشتراك</h3>
+    <form id="redeemForm" style="display:flex;gap:10px">
+      <input name="code" dir="ltr" placeholder="XXXX-XXXX-XXXX" required style="text-transform:uppercase">
+      <button class="btn primary">تفعيل</button>
+    </form>
+    <p id="buyHint" style="color:var(--muted);margin-top:10px;font-size:.9rem"></p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:14px">📺 ربط جهاز تلفزيون جديد</h3>
+    <p style="color:var(--muted);font-size:0.9rem;margin-bottom:12px">إذا فتحت تطبيق التلفزيون وظهر لك كود ربط مكون من 6 خانات، أدخله هنا لربط حسابك فوراً بدون كتابة كلمة المرور بالريموت:</p>
+    <form id="tvPairForm" style="display:flex;gap:10px">
+      <input name="code" dir="ltr" placeholder="مثال: ABC123" maxlength="8" required style="text-transform:uppercase;font-size:1.1rem;letter-spacing:2px;font-weight:bold;max-width:240px">
+      <button class="btn primary">ربط التلفزيون الآن</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:14px">👤 بيانات الحساب</h3>
+    <p id="info" style="color:var(--muted);margin-bottom:18px"></p>
+    <form id="pwForm">
+      <div class="form-grid">
+        <div class="field"><label>كلمة المرور الحالية</label><input name="current" type="password" dir="ltr" required></div>
+        <div class="field"><label>كلمة المرور الجديدة</label><input name="next" type="password" dir="ltr" minlength="6" required></div>
+      </div>
+      <button class="btn">تغيير كلمة المرور</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script>
+(async () => {
+  const { cfg, user } = await initNav('account');
+  if (!user) return (location.href = '/login.html');
+
+  function render(u) {
+    const st = document.getElementById('status');
+    if (u.role === 'admin') { st.innerHTML = '<span class="badge ok">مدير</span>'; expiry.textContent = 'وصول كامل'; }
+    else if (u.active) { st.innerHTML = '<span class="badge ok">نشط</span>'; expiry.textContent = `ينتهي ${fmtDate(u.expires_at)} (باقي ${daysLeft(u.expires_at)} يوم)`; }
+    else { st.innerHTML = '<span class="badge bad">منتهي</span>'; expiry.textContent = 'فعّل كود اشتراك للمتابعة'; }
+    info.textContent = `${u.username} — ${u.email}`;
+  }
+  render(user);
+  buyHint.innerHTML = cfg.contactUrl ? `للحصول على كود اشتراك <a style="color:var(--brand2)" target="_blank" rel="noopener" href="${esc(cfg.contactUrl)}">تواصل معنا</a>` : 'للحصول على كود اشتراك تواصل مع الإدارة.';
+
+  redeemForm.onsubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const r = await api('/api/redeem', 'POST', { code: redeemForm.code.value });
+      toast(`تم التفعيل! أضيف ${r.days} يوم`, 'ok');
+      redeemForm.reset();
+      render((await api('/api/me')).user);
+    } catch (err) { toast(err.message, 'err'); }
+  };
+
+  tvPairForm.onsubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const r = await api('/api/tv/confirm-pair', 'POST', { code: tvPairForm.code.value });
+      toast(r.message || 'تم ربط التلفزيون بنجاح!', 'ok');
+      tvPairForm.reset();
+    } catch (err) { toast(err.message, 'err'); }
+  };
+  pwForm.onsubmit = async (e) => {
+    e.preventDefault();
+    try { await api('/api/me/password', 'POST', { current: pwForm.current.value, next: pwForm.next.value }); toast('تم تغيير كلمة المرور', 'ok'); pwForm.reset(); }
+    catch (err) { toast(err.message, 'err'); }
+  };
+})();
+</script>
+</body>
+</html>
