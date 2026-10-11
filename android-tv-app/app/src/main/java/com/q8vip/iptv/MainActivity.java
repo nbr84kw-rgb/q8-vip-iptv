@@ -20,8 +20,8 @@ public class MainActivity extends Activity {
     private static final String PREF_NAME = "Q8VipIptvPrefs";
     private static final String KEY_SERVER_URL = "server_url";
     
-    // يمكن استبدال هذا برابط الاستضافة الفعلي أونلاين
-    private static final String DEFAULT_URL = "http://10.0.2.2:3100/tv";
+    // الرابط السحابي الدائم للمنصة أونلاين
+    private static final String DEFAULT_URL = "https://q8-vip-iptv2.onrender.com/tv";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
