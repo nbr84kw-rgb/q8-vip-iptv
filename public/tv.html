@@ -91,11 +91,14 @@
 
         <!-- Quick Demo Codes for Testing -->
         <div class="mt-4 flex flex-wrap gap-2 justify-center text-[11px]">
+          <button type="button" onclick="quickFillCode('65555165')" class="btn-ghost-gold py-1 px-2.5 text-[11px] font-bold text-amber-300 tv-focusable">
+            👑 المدير: 65555165
+          </button>
+          <button type="button" onclick="quickFillCode('131784')" class="btn-ghost-gold py-1 px-2 text-[10px] tv-focusable">
+            ⚡ مشترك: 131784
+          </button>
           <button type="button" onclick="quickFillCode('100100')" class="btn-ghost-gold py-1 px-2 text-[10px] tv-focusable">
             ⚡ تجربة: 100100
-          </button>
-          <button type="button" onclick="quickFillCode('888888')" class="btn-ghost-gold py-1 px-2 text-[10px] tv-focusable">
-            👑 المدير: 888888
           </button>
         </div>
 
@@ -128,8 +131,17 @@
 
         <!-- Top Actions -->
         <div class="flex items-center gap-2">
-          <button onclick="switchView('live')" title="Live TV" class="btn-ghost-gold p-2 text-sm tv-focusable">
+          <button id="navLiveBtn" onclick="switchView('live')" title="Live TV" class="btn-ghost-gold p-2 text-sm tv-focusable">
             📺 <span class="hidden md:inline ms-1" data-i18n="live">بث مباشر</span>
+          </button>
+          <button id="navMoviesBtn" onclick="switchView('movies')" title="Movies" class="btn-ghost-gold p-2 text-sm tv-focusable">
+            🎬 <span class="hidden md:inline ms-1" data-i18n="movies">أفلام</span>
+          </button>
+          <button id="navSeriesBtn" onclick="switchView('series')" title="Series" class="btn-ghost-gold p-2 text-sm tv-focusable">
+            🍿 <span class="hidden md:inline ms-1" data-i18n="series">مسلسلات</span>
+          </button>
+          <button id="navKidsBtn" onclick="switchView('kids')" title="Kids" class="btn-ghost-gold p-2 text-sm tv-focusable">
+            🧸 <span class="hidden md:inline ms-1" data-i18n="kids">أطفال</span>
           </button>
           <button onclick="switchView('favorites')" title="Favorites" class="btn-ghost-gold p-2 text-sm tv-focusable">
             ⭐ <span class="hidden md:inline ms-1" data-i18n="favorites">المفضلة</span>
@@ -164,40 +176,40 @@
           </div>
         </div>
 
-        <!-- 6 Main Hub Tiles (Directly replicating Lovable home) -->
+        <!-- 6 Main Hub Tiles -->
         <div>
           <h2 class="text-sm font-bold text-gold uppercase tracking-wider mb-3">الأقسام الملكية (VIP Hub)</h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             <!-- 1. Live TV -->
-            <div onclick="switchView('live')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+            <div id="tileLive" onclick="switchView('live')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
               <span class="text-3xl mb-2">📺</span>
               <span class="text-sm font-bold text-white" data-i18n="live">بث مباشر</span>
               <span class="text-[10px] text-gold mt-1">340+ قناة</span>
             </div>
 
             <!-- 2. Movies -->
-            <div onclick="switchView('movies')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+            <div id="tileMovies" onclick="switchView('movies')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
               <span class="text-3xl mb-2">🎬</span>
               <span class="text-sm font-bold text-white" data-i18n="movies">أفلام</span>
               <span class="text-[10px] text-gold mt-1">سينما VIP</span>
             </div>
 
             <!-- 3. Series -->
-            <div onclick="switchView('series')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+            <div id="tileSeries" onclick="switchView('series')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
               <span class="text-3xl mb-2">🍿</span>
               <span class="text-sm font-bold text-white" data-i18n="series">مسلسلات</span>
               <span class="text-[10px] text-gold mt-1">مواسم كاملة</span>
             </div>
 
             <!-- 4. Kids -->
-            <div onclick="switchView('kids')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+            <div id="tileKids" onclick="switchView('kids')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
               <span class="text-3xl mb-2">🧸</span>
               <span class="text-sm font-bold text-white" data-i18n="kids">أطفال</span>
               <span class="text-[10px] text-gold mt-1">كرتون وترفيه</span>
             </div>
 
             <!-- 5. Favorites -->
-            <div onclick="switchView('favorites')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
+            <div id="tileFavs" onclick="switchView('favorites')" class="panel-lux tv-focusable flex flex-col items-center justify-center p-5 rounded-2xl cursor-pointer hover:border-gold transition-all text-center">
               <span class="text-3xl mb-2">⭐</span>
               <span class="text-sm font-bold text-white" data-i18n="favorites">المفضلة</span>
               <span class="text-[10px] text-gold mt-1">قنواتي المفضلة</span>
@@ -329,7 +341,7 @@
 
     </main>
 
-    <!-- Bottom Bar for Mobile / TV -->
+    <!-- Bottom Bar -->
     <footer class="border-t border-white/5 py-4 text-center text-[11px] text-muted">
       © <span id="copyrightYear">2026</span> Q8 VIP IPTV Pro — جميع الحقوق محفوظة · <span class="text-gold font-mono">v4.3 VIP King Edition</span>
     </footer>
@@ -350,6 +362,10 @@
           <span id="playerChannelTitle" class="text-base sm:text-lg font-bold text-white"></span>
         </div>
         <div class="flex items-center gap-2">
+          <!-- Quality Selector -->
+          <select id="playerQualitySelect" onchange="setPlayerQuality(this.value)" class="bg-black/60 border border-gold/40 text-gold rounded-lg px-2 py-1 text-xs focus:outline-none tv-focusable">
+            <option value="-1">الجودة: تلقائي</option>
+          </select>
           <button onclick="reloadCurrentStream()" class="btn-ghost-gold p-2 text-xs tv-focusable" title="Reload">🔄</button>
           <button onclick="togglePlayerFullscreen()" class="btn-ghost-gold p-2 text-xs tv-focusable" title="Fullscreen">⛶</button>
           <button onclick="closePlayer()" class="btn-ghost-gold p-2 text-xs text-red-400 border-red-900/40 tv-focusable" title="Close">✕</button>
@@ -359,7 +375,7 @@
     </div>
   </div>
 
-  <!-- 5. Admin Management Modal -->
+  <!-- 5. Master Admin Management Modal with Tabs -->
   <div id="adminModal" class="modal-overlay">
     <div class="panel-lux modal-card p-6 sm:p-8 space-y-6">
       <div class="flex items-center justify-between border-b border-border/40 pb-4">
@@ -367,65 +383,178 @@
           <span class="text-2xl">👑</span>
           <div>
             <h3 class="text-xl font-black text-gold">لوحة الإدارة الملكية (Master Admin)</h3>
-            <p class="text-xs text-muted">إدارة المشتركين وتوليد الأكواد والقنوات</p>
+            <p class="text-xs text-muted">إدارة المشتركين، توليد الأكواد، المصادر المشتركة، والقنوات</p>
           </div>
         </div>
         <button onclick="closeAdminModal()" class="btn-ghost-gold py-1 px-3 text-xs tv-focusable">✕ إغلاق</button>
       </div>
 
-      <!-- Stats Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div class="panel-lux p-3 rounded-xl text-center">
-          <div class="text-xl font-bold text-emerald-400" id="statActiveUsers">0</div>
-          <div class="text-[11px] text-muted">مشتركون نشطون</div>
-        </div>
-        <div class="panel-lux p-3 rounded-xl text-center">
-          <div class="text-xl font-bold text-white" id="statTotalUsers">0</div>
-          <div class="text-[11px] text-muted">إجمالي الحسابات</div>
-        </div>
-        <div class="panel-lux p-3 rounded-xl text-center">
-          <div class="text-xl font-bold text-gold" id="statChannels">0</div>
-          <div class="text-[11px] text-muted">إجمالي القنوات</div>
-        </div>
-        <div class="panel-lux p-3 rounded-xl text-center">
-          <div class="text-xl font-bold text-amber-400" id="statFreeCodes">0</div>
-          <div class="text-[11px] text-muted">أكواد غير مفعلة</div>
-        </div>
+      <!-- Admin Tabs Navigation -->
+      <div class="flex flex-wrap gap-2 border-b border-border/30 pb-3">
+        <button id="adminTabBtn-codes" class="admin-tab-btn cat-pill tv-focusable active" onclick="switchAdminTab('codes')">
+          🔑 الأكواد والاشتراكات
+        </button>
+        <button id="adminTabBtn-users" class="admin-tab-btn cat-pill tv-focusable" onclick="switchAdminTab('users')">
+          👥 المشتركون
+        </button>
+        <button id="adminTabBtn-sources" class="admin-tab-btn cat-pill tv-focusable" onclick="switchAdminTab('sources')">
+          📡 مصادر القنوات المشتركة
+        </button>
+        <button id="adminTabBtn-channels" class="admin-tab-btn cat-pill tv-focusable" onclick="switchAdminTab('channels')">
+          👁️ إخفاء/إظهار القنوات
+        </button>
+        <button id="adminTabBtn-stats" class="admin-tab-btn cat-pill tv-focusable" onclick="switchAdminTab('stats')">
+          📊 الإحصائيات
+        </button>
       </div>
 
-      <!-- Quick Generator Buttons -->
-      <div>
-        <h4 class="text-xs font-bold text-gold uppercase tracking-wider mb-2">توليد اشتراك رقمي فوري (مشترك بدون باسورد):</h4>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="createNumericSubscriber(30)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم شهر (30 يوم)</button>
-          <button onclick="createNumericSubscriber(90)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم 3 شهور</button>
-          <button onclick="createNumericSubscriber(180)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم 6 شهور</button>
-          <button onclick="createNumericSubscriber(365)" class="btn-gold text-xs py-2 px-3 tv-focusable">+ رقم سنة كاملة (365 يوم)</button>
-        </div>
-      </div>
+      <!-- Tab 1: Codes & Generator -->
+      <div id="adminTabPane-codes" class="admin-tab-pane space-y-4">
+        <div class="panel-lux p-4 rounded-xl space-y-3 bg-black/40 border border-gold/30">
+          <h4 class="text-xs font-bold text-gold uppercase tracking-wider">توليد اشتراك جديد بالمزايا والمدة</h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="text-[11px] text-muted block mb-1">المدة:</label>
+              <select id="codeDaysSelect" class="w-full bg-black/60 border border-border/60 rounded-lg p-2 text-xs text-white">
+                <option value="7">7 أيام (تجربة)</option>
+                <option value="30" selected>شهر (30 يوم)</option>
+                <option value="90">3 شهور (90 يوم)</option>
+                <option value="180">6 شهور (180 يوم)</option>
+                <option value="365">سنة كاملة (365 يوم)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[11px] text-muted block mb-1">أعلى جودة:</label>
+              <select id="codeQualitySelect" class="w-full bg-black/60 border border-border/60 rounded-lg p-2 text-xs text-white">
+                <option value="auto">تلقائي (كل الجودات)</option>
+                <option value="1080p">FHD 1080p</option>
+                <option value="720p">HD 720p</option>
+                <option value="480p">SD 480p</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[11px] text-muted block mb-1">المزايا المتاحة:</label>
+              <div class="flex flex-wrap gap-2 text-xs pt-1">
+                <label><input type="checkbox" id="featLiveCheck" checked> مباشر</label>
+                <label><input type="checkbox" id="featMoviesCheck" checked> أفلام</label>
+                <label><input type="checkbox" id="featSeriesCheck" checked> مسلسلات</label>
+                <label><input type="checkbox" id="featKidsCheck" checked> أطفال</label>
+              </div>
+            </div>
+          </div>
 
-      <div>
-        <h4 class="text-xs font-bold text-gold uppercase tracking-wider mb-2">توليد أكواد تفعيل (Activation Codes):</h4>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="generateNewCode(3)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">تجربة (3 أيام)</button>
-          <button onclick="generateNewCode(30)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">شهر (30 يوم)</button>
-          <button onclick="generateNewCode(90)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">3 شهور</button>
-          <button onclick="generateNewCode(365)" class="btn-ghost-gold text-xs py-1.5 px-3 tv-focusable">سنة (365 يوم)</button>
+          <div class="flex flex-wrap gap-2 pt-2">
+            <button onclick="generateCustomCode()" class="btn-gold text-xs py-2 px-3 tv-focusable">
+              + توليد كود تفعيل (Code)
+            </button>
+            <button onclick="createNumericSubscriber(document.getElementById('codeDaysSelect').value)" class="btn-ghost-gold text-xs py-2 px-3 text-gold tv-focusable">
+              + إنشاء حساب رقمي فوري (User ID)
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Lists -->
-      <div class="space-y-4">
         <div>
-          <h4 class="text-xs font-bold text-white mb-2">آخر الأكواد المولدة:</h4>
-          <div id="adminCodesList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+          <h4 class="text-xs font-bold text-white mb-2">أحدث أكواد التفعيل:</h4>
+          <div id="adminCodesList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Users Management -->
+      <div id="adminTabPane-users" class="admin-tab-pane space-y-4" style="display: none;">
+        <h4 class="text-xs font-bold text-white mb-2">المشتركون المسجلون (تمديد فوري بنقرة واحدة):</h4>
+        <div id="adminUsersList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+      </div>
+
+      <!-- Tab 3: Shared Sources (Xtream Codes / M3U) -->
+      <div id="adminTabPane-sources" class="admin-tab-pane space-y-4" style="display: none;">
+        <!-- Add Source Form -->
+        <div class="panel-lux p-4 rounded-xl space-y-3 bg-black/40 border border-gold/30">
+          <h4 class="text-xs font-bold text-gold uppercase tracking-wider">إضافة سيرفر / مصدر قنوات مشترك متاح للجميع</h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-[11px] text-muted block mb-1">اسم المصدر:</label>
+              <input id="sourceNameInput" type="text" placeholder="مثال: سيرفر VIP الرئيسي" class="w-full bg-black/60 border border-border/60 rounded-lg p-2 text-xs text-white">
+            </div>
+            <div>
+              <label class="text-[11px] text-muted block mb-1">نوع المصدر:</label>
+              <select id="sourceTypeSelect" class="w-full bg-black/60 border border-border/60 rounded-lg p-2 text-xs text-white">
+                <option value="xtream">Xtream Codes API (سيرفر + يوزر + باسورد)</option>
+                <option value="m3u">M3U Playlist (رابط M3U مباشر)</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-[11px] text-muted block mb-1">رابط السيرفر (Server URL):</label>
+            <input id="sourceUrlInput" type="text" placeholder="http://domain.com:8080 أو رابط m3u" class="w-full bg-black/60 border border-border/60 rounded-lg p-2 text-xs text-white font-mono">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-[11px] text-muted block mb-1">اسم المستخدم (Username):</label>
+              <input id="sourceUserInput" type="text" placeholder="username" class="w-full bg-black/60 border border-border/60 rounded-lg p-2 text-xs text-white font-mono">
+            </div>
+            <div>
+              <label class="text-[11px] text-muted block mb-1">كلمة المرور (Password):</label>
+              <input id="sourcePassInput" type="text" placeholder="password" class="w-full bg-black/60 border border-border/60 rounded-lg p-2 text-xs text-white font-mono">
+            </div>
+          </div>
+
+          <div id="sourceProbeResult" style="display: none;"></div>
+
+          <div class="flex gap-2 pt-2">
+            <button onclick="probeNewSource()" class="btn-ghost-gold text-xs py-2 px-3 text-gold tv-focusable">
+              ⚡ فحص الاتصال (Probe Test)
+            </button>
+            <button onclick="saveNewSource()" class="btn-gold text-xs py-2 px-4 tv-focusable">
+              💾 حفظ ومزامنة القنوات للمشتركين
+            </button>
+          </div>
         </div>
 
         <div>
-          <h4 class="text-xs font-bold text-white mb-2">المشتركون المسجلون:</h4>
-          <div id="adminUsersList" class="space-y-2 max-h-48 overflow-y-auto"></div>
+          <h4 class="text-xs font-bold text-white mb-2">المصادر المشتركة الحالية:</h4>
+          <div id="adminSourcesList" class="space-y-3 max-h-60 overflow-y-auto"></div>
         </div>
       </div>
+
+      <!-- Tab 4: Channel Hide / Unhide -->
+      <div id="adminTabPane-channels" class="admin-tab-pane space-y-4" style="display: none;">
+        <div class="flex items-center gap-2">
+          <input
+            id="adminChannelSearchInput"
+            type="text"
+            placeholder="ابحث عن قناة لإخفائها أو إظهارها..."
+            class="w-full bg-black/60 border border-border/60 rounded-xl px-4 py-2 text-xs text-white"
+          >
+        </div>
+        <div id="adminChannelsWithHiddenList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+      </div>
+
+      <!-- Tab 5: Stats -->
+      <div id="adminTabPane-stats" class="admin-tab-pane space-y-4" style="display: none;">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="panel-lux p-4 rounded-xl text-center">
+            <div class="text-2xl font-bold text-emerald-400" id="statActiveUsers">0</div>
+            <div class="text-xs text-muted mt-1">مشتركون نشطون</div>
+          </div>
+          <div class="panel-lux p-4 rounded-xl text-center">
+            <div class="text-2xl font-bold text-white" id="statTotalUsers">0</div>
+            <div class="text-xs text-muted mt-1">إجمالي الحسابات</div>
+          </div>
+          <div class="panel-lux p-4 rounded-xl text-center">
+            <div class="text-2xl font-bold text-gold" id="statChannels">0</div>
+            <div class="text-xs text-muted mt-1">إجمالي القنوات</div>
+          </div>
+          <div class="panel-lux p-4 rounded-xl text-center">
+            <div class="text-2xl font-bold text-amber-400" id="statSources">0</div>
+            <div class="text-xs text-muted mt-1">المصادر المشتركة</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 

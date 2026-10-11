@@ -43,7 +43,15 @@ const I18N = {
     importM3U: "استيراد ملف M3U",
     noResults: "لا توجد نتائج مطابقة",
     back: "رجوع",
-    days: "يوم"
+    days: "يوم",
+    quality: "الجودة",
+    autoQuality: "تلقائي",
+    probeSuccess: "تم الاتصال بنجاح!",
+    probeFailed: "فشل الاتصال بالمصدر",
+    syncSuccess: "تمت المزامنة بنجاح!",
+    hide: "إخفاء",
+    unhide: "إظهار",
+    hidden: "مخفية"
   },
   en: {
     appName: "Q8 VIP IPTV",
@@ -84,7 +92,15 @@ const I18N = {
     importM3U: "Import M3U",
     noResults: "No results found",
     back: "Back",
-    days: "days"
+    days: "days",
+    quality: "Quality",
+    autoQuality: "Auto",
+    probeSuccess: "Connected successfully!",
+    probeFailed: "Connection probe failed",
+    syncSuccess: "Synced successfully!",
+    hide: "Hide",
+    unhide: "Show",
+    hidden: "Hidden"
   }
 };
 
@@ -98,6 +114,7 @@ let hlsPlayer = null;
 let currentView = 'home';
 let favorites = JSON.parse(localStorage.getItem('kingvip_favs') || '[]');
 let watchHistory = JSON.parse(localStorage.getItem('kingvip_history') || '[]');
+let currentAdminTab = 'codes';
 
 function t(key) {
   return I18N[currentLang]?.[key] || key;
@@ -221,9 +238,34 @@ function showApp() {
 function renderUserInfo() {
   if (!currentUser) return;
   const adminBtn = document.getElementById('navAdminBtn');
+  const isAdmin = currentUser.role === 'admin' || currentUser.username === '65555165' || currentUser.username === '888888';
   if (adminBtn) {
-    adminBtn.style.display = (currentUser.role === 'admin' || currentUser.username === '888888') ? 'flex' : 'none';
+    adminBtn.style.display = isAdmin ? 'flex' : 'none';
   }
+
+  // Feature gate checks
+  const feats = currentUser.features || { live: true, movies: true, series: true, kids: true };
+  const navLive = document.getElementById('navLiveBtn');
+  const navMovies = document.getElementById('navMoviesBtn');
+  const navSeries = document.getElementById('navSeriesBtn');
+  const navKids = document.getElementById('navKidsBtn');
+  const tileLive = document.getElementById('tileLive');
+  const tileMovies = document.getElementById('tileMovies');
+  const tileSeries = document.getElementById('tileSeries');
+  const tileKids = document.getElementById('tileKids');
+
+  if (navLive) navLive.style.display = (feats.live !== false) ? 'flex' : 'none';
+  if (tileLive) tileLive.style.display = (feats.live !== false) ? 'flex' : 'none';
+
+  if (navMovies) navMovies.style.display = (feats.movies !== false) ? 'flex' : 'none';
+  if (tileMovies) tileMovies.style.display = (feats.movies !== false) ? 'flex' : 'none';
+
+  if (navSeries) navSeries.style.display = (feats.series !== false) ? 'flex' : 'none';
+  if (tileSeries) tileSeries.style.display = (feats.series !== false) ? 'flex' : 'none';
+
+  if (navKids) navKids.style.display = (feats.kids !== false) ? 'flex' : 'none';
+  if (tileKids) tileKids.style.display = (feats.kids !== false) ? 'flex' : 'none';
+
   renderSubscriptionBadge();
 }
 
@@ -232,9 +274,10 @@ function renderSubscriptionBadge() {
   if (!badge || !currentUser) return;
   const expDate = currentUser.expires_at ? new Date(currentUser.expires_at).toLocaleDateString(currentLang === 'ar' ? 'ar-KW' : 'en-US') : 'Lifetime VIP';
   const isExp = !currentUser.active;
+  const isAdmin = currentUser.role === 'admin' || currentUser.username === '65555165' || currentUser.username === '888888';
   badge.innerHTML = `
-    <div class="panel-lux flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-bold text-gold">
-      <span>👑 ${currentUser.role === 'admin' ? 'Master Admin' : t('vipPlan')}</span>
+    <div class="panel-lux flex flex-wrap items-center gap-2 sm:gap-3 px-4 py-2 rounded-xl text-xs font-bold text-gold">
+      <span>👑 ${isAdmin ? 'Master Admin' : t('vipPlan')}</span>
       <span class="opacity-40">|</span>
       <span>${isExp ? t('subscriptionExpired') : t('expiresAt')} ${expDate}</span>
       <span class="opacity-40">|</span>
@@ -385,7 +428,7 @@ function renderChannels() {
   }).join('');
 }
 
-// ---------------- Video Player ----------------
+// ---------------- Video Player with Quality Control ----------------
 function playChannel(id) {
   const channel = channelsList.find(c => c.id === id);
   if (!channel) return;
@@ -403,6 +446,9 @@ function playChannel(id) {
 
   playerOverlay.style.display = 'flex';
   
+  const qualitySelect = document.getElementById('playerQualitySelect');
+  if (qualitySelect) qualitySelect.innerHTML = `<option value="-1">${t('autoQuality')}</option>`;
+
   if (Hls.isSupported()) {
     if (hlsPlayer) hlsPlayer.destroy();
     hlsPlayer = new Hls({
@@ -412,7 +458,18 @@ function playChannel(id) {
     });
     hlsPlayer.loadSource(channel.url);
     hlsPlayer.attachMedia(video);
-    hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+
+    hlsPlayer.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+      video.play();
+      if (qualitySelect && data.levels && data.levels.length > 1) {
+        qualitySelect.innerHTML = `<option value="-1">${t('autoQuality')}</option>`;
+        data.levels.forEach((lvl, idx) => {
+          const h = lvl.height || 'HD';
+          qualitySelect.innerHTML += `<option value="${idx}">${h}p</option>`;
+        });
+      }
+    });
+
     hlsPlayer.on(Hls.Events.ERROR, (event, data) => {
       if (data.fatal) {
         switch (data.type) {
@@ -431,6 +488,13 @@ function playChannel(id) {
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = channel.url;
     video.play();
+  }
+}
+
+function setPlayerQuality(lvlIndex) {
+  if (hlsPlayer) {
+    hlsPlayer.currentLevel = Number(lvlIndex);
+    showToast(lvlIndex === '-1' ? 'جودة تلقائية (Auto)' : `تم ضبط الجودة`);
   }
 }
 
@@ -519,7 +583,6 @@ function switchView(viewName) {
     target.style.display = 'block';
   }
 
-  // Active state on nav buttons
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-view') === viewName);
   });
@@ -559,14 +622,13 @@ function renderSettingsView() {
   `;
 }
 
-// ---------------- Admin Panel ----------------
+// ---------------- Admin Panel & Tabs ----------------
 function openAdminModal() {
   const modal = document.getElementById('adminModal');
   if (modal) {
     modal.classList.add('active');
+    switchAdminTab('codes');
     loadAdminStats();
-    loadAdminCodes();
-    loadAdminUsers();
   }
 }
 
@@ -575,16 +637,35 @@ function closeAdminModal() {
   if (modal) modal.classList.remove('active');
 }
 
+function switchAdminTab(tab) {
+  currentAdminTab = tab;
+  document.querySelectorAll('.admin-tab-pane').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+  const pane = document.getElementById(`adminTabPane-${tab}`);
+  if (pane) pane.style.display = 'block';
+
+  const btn = document.getElementById(`adminTabBtn-${tab}`);
+  if (btn) btn.classList.add('active');
+
+  if (tab === 'codes') loadAdminCodes();
+  if (tab === 'users') loadAdminUsers();
+  if (tab === 'sources') loadAdminSources();
+  if (tab === 'channels') loadAdminChannelsWithHidden();
+  if (tab === 'stats') loadAdminStats();
+}
+
 async function loadAdminStats() {
   try {
     const stats = await api('/api/admin/stats');
     document.getElementById('statActiveUsers').textContent = stats.active || 0;
     document.getElementById('statTotalUsers').textContent = stats.users || 0;
     document.getElementById('statChannels').textContent = stats.channels || 0;
-    document.getElementById('statFreeCodes').textContent = stats.freeCodes || 0;
+    document.getElementById('statSources').textContent = stats.sources || 0;
   } catch (e) {}
 }
 
+// Tab 1: Codes
 async function loadAdminCodes() {
   const listEl = document.getElementById('adminCodesList');
   if (!listEl) return;
@@ -609,37 +690,26 @@ async function loadAdminCodes() {
   } catch (e) {}
 }
 
-async function loadAdminUsers() {
-  const listEl = document.getElementById('adminUsersList');
-  if (!listEl) return;
-  try {
-    const users = await api('/api/admin/users');
-    listEl.innerHTML = users.slice(0, 50).map(u => {
-      const exp = u.role === 'admin' ? 'دائم' : new Date(u.expires_at).toLocaleDateString('ar-KW');
-      return `
-        <div class="flex items-center justify-between p-3 rounded-lg bg-surface/50 border border-border/40">
-          <div>
-            <span class="font-mono font-bold">${u.username}</span>
-            <span class="text-xs text-muted ms-2">${u.role === 'admin' ? 'مدير' : 'مشترك'} · ينتهي: ${exp}</span>
-          </div>
-          <div class="flex items-center gap-1">
-            <button class="btn-ghost-gold text-xs py-1 px-2" onclick="extendUser(${u.id}, 30)">+30 يوم</button>
-            <button class="btn-ghost-gold text-xs py-1 px-2" onclick="extendUser(${u.id}, 365)">+سنة</button>
-          </div>
-        </div>
-      `;
-    }).join('');
-  } catch (e) {}
-}
+async function generateCustomCode() {
+  const days = document.getElementById('codeDaysSelect')?.value || 30;
+  const live = document.getElementById('featLiveCheck')?.checked ?? true;
+  const movies = document.getElementById('featMoviesCheck')?.checked ?? true;
+  const series = document.getElementById('featSeriesCheck')?.checked ?? true;
+  const kids = document.getElementById('featKidsCheck')?.checked ?? true;
+  const quality = document.getElementById('codeQualitySelect')?.value || 'auto';
 
-async function generateNewCode(days) {
   try {
     const res = await api('/api/admin/codes', {
       method: 'POST',
-      body: JSON.stringify({ days: Number(days), count: 1 })
+      body: JSON.stringify({
+        days: Number(days),
+        count: 1,
+        features: { live, movies, series, kids },
+        max_quality: quality
+      })
     });
     if (res.ok && res.codes && res.codes[0]) {
-      showToast(`${currentLang === 'ar' ? 'تم إنشاء الكود:' : 'Generated code:'} ${res.codes[0]}`);
+      showToast(`تم إنشاء الكود: ${res.codes[0]}`);
       navigator.clipboard.writeText(res.codes[0]).catch(() => {});
       loadAdminCodes();
       loadAdminStats();
@@ -650,13 +720,23 @@ async function generateNewCode(days) {
 }
 
 async function createNumericSubscriber(days) {
+  const live = document.getElementById('featLiveCheck')?.checked ?? true;
+  const movies = document.getElementById('featMoviesCheck')?.checked ?? true;
+  const series = document.getElementById('featSeriesCheck')?.checked ?? true;
+  const kids = document.getElementById('featKidsCheck')?.checked ?? true;
+  const quality = document.getElementById('codeQualitySelect')?.value || 'auto';
+
   try {
     const res = await api('/api/admin/users', {
       method: 'POST',
-      body: JSON.stringify({ days: Number(days) })
+      body: JSON.stringify({
+        days: Number(days),
+        features: { live, movies, series, kids },
+        max_quality: quality
+      })
     });
     if (res.ok) {
-      showToast(`${currentLang === 'ar' ? 'تم إنشاء المشترك الرقمي:' : 'Subscriber created:'} ${res.username}`);
+      showToast(`تم إنشاء المشترك: ${res.username}`);
       navigator.clipboard.writeText(res.username).catch(() => {});
       loadAdminUsers();
       loadAdminStats();
@@ -664,6 +744,37 @@ async function createNumericSubscriber(days) {
   } catch (e) {
     showToast('Failed to create subscriber', true);
   }
+}
+
+// Tab 2: Users
+async function loadAdminUsers() {
+  const listEl = document.getElementById('adminUsersList');
+  if (!listEl) return;
+  try {
+    const users = await api('/api/admin/users');
+    listEl.innerHTML = users.slice(0, 50).map(u => {
+      const exp = u.role === 'admin' ? 'دائم' : new Date(u.expires_at).toLocaleDateString('ar-KW');
+      const isSuspended = !!u.banned;
+      return `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-surface/50 border border-border/40 gap-2">
+          <div>
+            <span class="font-mono font-bold text-gold">${u.username}</span>
+            <span class="text-xs text-muted ms-2">${u.role === 'admin' ? '👑 مدير' : 'مشترك'} · ينتهي: ${exp}</span>
+            ${isSuspended ? '<span class="text-[10px] text-red-400 ms-2 font-bold">[موقوف]</span>' : ''}
+          </div>
+          <div class="flex flex-wrap items-center gap-1">
+            <button class="btn-ghost-gold text-xs py-1 px-1.5" onclick="extendUser(${u.id}, 7)">+7 أيام</button>
+            <button class="btn-ghost-gold text-xs py-1 px-1.5" onclick="extendUser(${u.id}, 30)">+شهر</button>
+            <button class="btn-ghost-gold text-xs py-1 px-1.5" onclick="extendUser(${u.id}, 90)">+3 أشهر</button>
+            <button class="btn-ghost-gold text-xs py-1 px-1.5" onclick="extendUser(${u.id}, 365)">+سنة</button>
+            <button class="btn-ghost-gold text-xs py-1 px-2 ${isSuspended ? 'text-emerald-400' : 'text-amber-400'}" onclick="toggleUserStatus(${u.id}, ${isSuspended ? 0 : 1})">
+              ${isSuspended ? 'تفعيل' : 'إيقاف'}
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {}
 }
 
 async function extendUser(id, days) {
@@ -677,11 +788,180 @@ async function extendUser(id, days) {
   } catch (e) {}
 }
 
+async function toggleUserStatus(id, banned) {
+  try {
+    await api(`/api/admin/users/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ banned })
+    });
+    showToast(banned ? 'تم إيقاف الحساب' : 'تم تفعيل الحساب');
+    loadAdminUsers();
+  } catch (e) {}
+}
+
+// Tab 3: Sources (Shared Xtream & M3U)
+async function loadAdminSources() {
+  const listEl = document.getElementById('adminSourcesList');
+  if (!listEl) return;
+  try {
+    const sources = await api('/api/admin/sources');
+    if (sources.length === 0) {
+      listEl.innerHTML = `<div class="p-4 text-center text-xs text-muted">لا توجد مصادر مضافة حالياً. أضف سيرفرك المشترك بالأسفل.</div>`;
+      return;
+    }
+    listEl.innerHTML = sources.map(s => `
+      <div class="p-4 rounded-xl bg-surface/60 border border-border/40 space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-base">${s.type === 'xtream' ? '📡' : '📄'}</span>
+            <span class="font-bold text-white">${s.name}</span>
+            <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-300">${s.type}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn-ghost-gold text-xs py-1 px-2.5" onclick="syncSource(${s.id})">🔄 مزامنة</button>
+            <button class="btn-ghost-gold text-xs py-1 px-2 text-red-400 border-red-900/40" onclick="deleteSource(${s.id})">🗑️</button>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 text-xs text-muted">
+          <span>القنوات: <b class="text-white">${s.live_count || 0}</b></span>
+          <span>الأفلام: <b class="text-white">${s.vod_count || 0}</b></span>
+          <span>المسلسلات: <b class="text-white">${s.series_count || 0}</b></span>
+          <span>الحالة: <b class="${s.active ? 'text-emerald-400' : 'text-red-400'}">${s.active ? 'نشط' : 'معطل'}</b></span>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {}
+}
+
+async function probeNewSource() {
+  const type = document.getElementById('sourceTypeSelect')?.value || 'xtream';
+  const url = (document.getElementById('sourceUrlInput')?.value || '').trim();
+  const username = (document.getElementById('sourceUserInput')?.value || '').trim();
+  const password = (document.getElementById('sourcePassInput')?.value || '').trim();
+  const probeStatus = document.getElementById('sourceProbeResult');
+
+  if (!url) {
+    showToast('رابط السيرفر مطلوب', true);
+    return;
+  }
+
+  probeStatus.style.display = 'block';
+  probeStatus.innerHTML = `<span class="text-amber-300">⏳ جاري فحص الاتصال بالسيرفر...</span>`;
+
+  try {
+    const res = await api('/api/admin/sources/probe', {
+      method: 'POST',
+      body: JSON.stringify({ type, url, username, password })
+    });
+    if (res.ok) {
+      probeStatus.innerHTML = `
+        <div class="p-3 rounded-lg bg-emerald-950/60 border border-emerald-700 text-xs text-emerald-300 space-y-1">
+          <div class="font-bold">✅ تم الاتصال بالسيرفر بنجاح!</div>
+          <div>بث مباشر: <b>${res.live_count}</b> قناة | أفلام: <b>${res.vod_count}</b> | مسلسلات: <b>${res.series_count}</b></div>
+        </div>
+      `;
+    } else {
+      probeStatus.innerHTML = `<div class="p-3 rounded-lg bg-red-950/60 border border-red-700 text-xs text-red-300">❌ ${res.error || 'فشل الاتصال'}</div>`;
+    }
+  } catch (e) {
+    probeStatus.innerHTML = `<div class="p-3 rounded-lg bg-red-950/60 border border-red-700 text-xs text-red-300">❌ تعذر الاتصال بالسيرفر</div>`;
+  }
+}
+
+async function saveNewSource() {
+  const name = (document.getElementById('sourceNameInput')?.value || 'سيرفر VIP').trim();
+  const type = document.getElementById('sourceTypeSelect')?.value || 'xtream';
+  const url = (document.getElementById('sourceUrlInput')?.value || '').trim();
+  const username = (document.getElementById('sourceUserInput')?.value || '').trim();
+  const password = (document.getElementById('sourcePassInput')?.value || '').trim();
+
+  if (!url) {
+    showToast('رابط السيرفر مطلوب', true);
+    return;
+  }
+
+  try {
+    const res = await api('/api/admin/sources', {
+      method: 'POST',
+      body: JSON.stringify({ name, type, url, username, password, is_global: 1 })
+    });
+    if (res.ok) {
+      showToast('تمت إضافة المصدر وبدء مزامنة القنوات!');
+      document.getElementById('sourceUrlInput').value = '';
+      document.getElementById('sourceUserInput').value = '';
+      document.getElementById('sourcePassInput').value = '';
+      document.getElementById('sourceProbeResult').style.display = 'none';
+      loadAdminSources();
+      loadData();
+    } else {
+      showToast(res.error || 'فشل حفظ المصدر', true);
+    }
+  } catch (e) {
+    showToast('خطأ أثناء حفظ المصدر', true);
+  }
+}
+
+async function syncSource(id) {
+  showToast('جاري تحديث ومزامنة القنوات...');
+  try {
+    const res = await api(`/api/admin/sources/${id}/sync`, { method: 'POST' });
+    if (res.ok) {
+      showToast('تمت المزامنة بنجاح!');
+      loadAdminSources();
+      loadData();
+    }
+  } catch (e) {
+    showToast('فشل التزامن', true);
+  }
+}
+
+async function deleteSource(id) {
+  if (!confirm('هل تريد بالتأكيد حذف هذا المصدر وقنواته؟')) return;
+  try {
+    await api(`/api/admin/sources/${id}`, { method: 'DELETE' });
+    showToast('تم حذف المصدر');
+    loadAdminSources();
+    loadData();
+  } catch (e) {}
+}
+
+// Tab 4: Channel Hiding (hidden_channels)
+async function loadAdminChannelsWithHidden() {
+  const listEl = document.getElementById('adminChannelsWithHiddenList');
+  if (!listEl) return;
+  const q = (document.getElementById('adminChannelSearchInput')?.value || '').trim();
+  try {
+    const channels = await api(`/api/admin/channels-with-hidden?q=${encodeURIComponent(q)}`);
+    listEl.innerHTML = channels.slice(0, 100).map(c => `
+      <div class="flex items-center justify-between p-2.5 rounded-lg bg-surface/50 border border-border/40">
+        <div class="flex items-center gap-2">
+          <img src="${c.logo || '/img/king-logo.png'}" class="h-6 w-6 object-contain" onerror="this.src='/img/king-logo.png'">
+          <span class="text-xs font-bold ${c.is_hidden ? 'text-zinc-500 line-through' : 'text-white'}">${c.name}</span>
+          ${c.is_hidden ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-red-950 text-red-400">مخفية</span>' : ''}
+        </div>
+        <button class="btn-ghost-gold text-xs py-1 px-2.5 ${c.is_hidden ? 'text-emerald-400' : 'text-zinc-400'}" onclick="toggleChannelHide(${c.id})">
+          ${c.is_hidden ? '👁️ إظهار' : '🚫 إخفاء'}
+        </button>
+      </div>
+    `).join('');
+  } catch (e) {}
+}
+
+async function toggleChannelHide(channelId) {
+  try {
+    const res = await api(`/api/admin/channels/${channelId}/toggle-hide`, { method: 'POST' });
+    if (res.ok) {
+      showToast(res.hidden ? 'تم إخفاء القناة عن المستخدمين' : 'تم إظهار القناة للمستخدمين');
+      loadAdminChannelsWithHidden();
+      loadData();
+    }
+  } catch (e) {}
+}
+
 // ---------------- Smart TV D-Pad Remote Navigation ----------------
 let focusedElement = null;
 
 function setupEventListeners() {
-  // Global TV remote keys listener
   window.addEventListener('keydown', (e) => {
     const focusable = Array.from(document.querySelectorAll('.tv-focusable:not([disabled])')).filter(el => {
       const style = window.getComputedStyle(el);
@@ -720,7 +1000,7 @@ function setupEventListeners() {
         focusedElement.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
       }
     } else if (e.key === 'Enter') {
-      if (focusedElement && focusedElement.tagName !== 'INPUT') {
+      if (focusedElement && focusedElement.tagName !== 'INPUT' && focusedElement.tagName !== 'SELECT') {
         focusedElement.click();
       }
     } else if (e.key === 'Backspace' || e.key === 'Escape') {
@@ -738,8 +1018,10 @@ function setupEventListeners() {
     }
   });
 
-  // Search inputs
   document.getElementById('channelSearchInput')?.addEventListener('input', () => {
     renderChannels();
+  });
+  document.getElementById('adminChannelSearchInput')?.addEventListener('input', () => {
+    loadAdminChannelsWithHidden();
   });
 }
