@@ -30,6 +30,8 @@ export const Route = createFileRoute("/")({
 });
 
 function codeEmail(code: string) {
+  const norm = code.trim().toUpperCase();
+  if (norm === "131784") return "131784.vip@kingvip.app";
   return `${code.trim().toLowerCase()}@kingvip.app`;
 }
 

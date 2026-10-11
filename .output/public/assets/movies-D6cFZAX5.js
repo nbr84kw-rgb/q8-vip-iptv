@@ -1,1 +1,0 @@
-import{r as e}from"./useRouter-Bbosk03Q.js";import{n as t}from"./i18n-C_L9Bixt.js";import{t as n}from"./AppShell-D8fAGNq6.js";import{t as r}from"./CatalogBrowser-D4DOqBA6.js";var i=e();function a(){let{t:e}=t();return(0,i.jsx)(n,{title:e(`movies`),children:(0,i.jsx)(r,{kind:`movie`})})}export{a as component};
