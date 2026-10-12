@@ -1,5 +1,5 @@
 import { t as createClient } from "../_libs/supabase__supabase-js.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/client-DgwLyTNE.mjs
+//#region node_modules/.nitro/vite/services/ssr/assets/client-DgwLyTNE.js
 function brokeredPreviewStorage() {
 	if (typeof window === "undefined") return void 0;
 	const host = location.hostname;
