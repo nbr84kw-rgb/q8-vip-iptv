@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-DaAP0g3p.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-CM32Fba8.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "C:/Users/win/.gemini/antigravity/scratch/iptv-site/src/routes/__root.tsx",
@@ -10,7 +10,7 @@ var tsrStartManifest = () => ({ routes: {
 			"/api/public/stream"
 		],
 		preloads: [
-			"/assets/index-NjHUO59A.js",
+			"/assets/index-BZLXRyvy.js",
 			"/assets/rolldown-runtime-CbXtAM7H.js",
 			"/assets/useRouter-Bbosk03Q.js",
 			"/assets/i18n-C_L9Bixt.js",
@@ -23,19 +23,19 @@ var tsrStartManifest = () => ({ routes: {
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-NjHUO59A.js"
+			src: "/assets/index-BZLXRyvy.js"
 		} }]
 	},
 	"/": {
 		filePath: "C:/Users/win/.gemini/antigravity/scratch/iptv-site/src/routes/index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/routes-YVL-99SJ.js",
+			"/assets/routes-C3DIJtyb.js",
 			"/assets/button-DzPzVPru.js",
 			"/assets/key-round-Bz-dOERi.js",
 			"/assets/loader-circle-RD3UCSSk.js",
 			"/assets/input-PVJgg9ul.js",
-			"/assets/label-DeLOncNb.js",
+			"/assets/label-kD-kR1oL.js",
 			"/assets/hero-bg-Babh26rA.js"
 		]
 	},
@@ -55,20 +55,20 @@ var tsrStartManifest = () => ({ routes: {
 			"/_authenticated/subscription",
 			"/_authenticated/watch"
 		],
-		preloads: ["/assets/route-6t2xTeWX.js"]
+		preloads: ["/assets/route-CRTPAuAl.js"]
 	},
 	"/_authenticated/admin": {
 		filePath: "C:/Users/win/.gemini/antigravity/scratch/iptv-site/src/routes/_authenticated/admin.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/admin-C6xfWhSu.js",
+			"/assets/admin-BusUbrpO.js",
 			"/assets/button-DzPzVPru.js",
 			"/assets/AppShell-D8fAGNq6.js",
-			"/assets/useMutation-Du41w-4k.js",
+			"/assets/useMutation-Cu613qeY.js",
 			"/assets/key-round-Bz-dOERi.js",
 			"/assets/trash-2-DyJv3aHM.js",
 			"/assets/input-PVJgg9ul.js",
-			"/assets/label-DeLOncNb.js"
+			"/assets/label-kD-kR1oL.js"
 		]
 	},
 	"/_authenticated/favorites": {
@@ -147,7 +147,7 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "C:/Users/win/.gemini/antigravity/scratch/iptv-site/src/routes/_authenticated/settings.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/settings-CxgpJ7i7.js",
+			"/assets/settings-Xwua0gW-.js",
 			"/assets/button-DzPzVPru.js",
 			"/assets/AppShell-D8fAGNq6.js",
 			"/assets/trash-2-DyJv3aHM.js",
@@ -158,23 +158,23 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "C:/Users/win/.gemini/antigravity/scratch/iptv-site/src/routes/_authenticated/sources.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/sources-DO7ito3M.js",
+			"/assets/sources-6MKk4DU8.js",
 			"/assets/button-DzPzVPru.js",
 			"/assets/AppShell-D8fAGNq6.js",
-			"/assets/useMutation-Du41w-4k.js",
+			"/assets/useMutation-Cu613qeY.js",
 			"/assets/trash-2-DyJv3aHM.js",
 			"/assets/input-PVJgg9ul.js",
-			"/assets/label-DeLOncNb.js"
+			"/assets/label-kD-kR1oL.js"
 		]
 	},
 	"/_authenticated/subscription": {
 		filePath: "C:/Users/win/.gemini/antigravity/scratch/iptv-site/src/routes/_authenticated/subscription.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/subscription-CIUA8UeD.js",
+			"/assets/subscription-3B1DC-ZC.js",
 			"/assets/button-DzPzVPru.js",
 			"/assets/AppShell-D8fAGNq6.js",
-			"/assets/useMutation-Du41w-4k.js"
+			"/assets/useMutation-Cu613qeY.js"
 		]
 	},
 	"/_authenticated/watch": {

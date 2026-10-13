@@ -17,10 +17,11 @@ export const Route = createFileRoute("/api/auth/login")({
         try {
           const body = (await request.json().catch(() => ({}))) as {
             username?: string;
+            code?: string;
             password?: string;
             is_tv?: boolean;
           };
-          const username = String(body.username || "").trim();
+          const username = String(body.username || body.code || "").trim();
           if (!username) {
             return new Response(JSON.stringify({ error: "الرجاء إدخال كود أو رقم الاشتراك" }), {
               status: 400,

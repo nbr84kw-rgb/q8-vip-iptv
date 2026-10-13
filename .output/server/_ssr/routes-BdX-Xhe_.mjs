@@ -10,7 +10,7 @@ import { t as Input } from "./input-Az21KAbD.mjs";
 import { t as Label } from "./label-C5Isi2me.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { t as hero_bg_default } from "./hero-bg-DRqgPTBe.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-BRW5BYJB.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-BdX-Xhe_.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function codeEmail(code) {
@@ -55,7 +55,20 @@ function AuthPage() {
 					password: codePassword(normalized),
 					options: { emailRedirectTo: window.location.origin }
 				});
-				if (error) throw error;
+				if (error) if (error.message?.toLowerCase().includes("already registered")) {
+					const altEmail = `${normalized.toLowerCase()}.vip@kingvip.app`;
+					if ((await supabase.auth.signInWithPassword({
+						email: altEmail,
+						password: codePassword(normalized)
+					})).error) {
+						const altSignUp = await supabase.auth.signUp({
+							email: altEmail,
+							password: codePassword(normalized),
+							options: { emailRedirectTo: window.location.origin }
+						});
+						if (altSignUp.error) throw altSignUp.error;
+					}
+				} else throw error;
 				window.sessionStorage.setItem("kingvip.pendingCode", normalized);
 				toast.success(lang === "ar" ? "تم تفعيل الكود" : "Code activated");
 			}

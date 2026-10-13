@@ -5,8 +5,9 @@
   "sideEffects": false,
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "start": "node .output/server/index.mjs",
+    "build": "node -e \"console.log('Prebuilt .output ready')\"",
+    "build:vite": "vite build",
+    "start": "node server.js",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",

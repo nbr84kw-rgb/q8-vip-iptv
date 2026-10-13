@@ -1,7 +1,7 @@
 import { n as createServerFn, t as TSS_SERVER_FUNCTION } from "./ssr.mjs";
 import { t as requireSupabaseAuth } from "./auth-middleware-D6DsnQQB.mjs";
 import { a as stringType, i as objectType, n as enumType, r as numberType, t as booleanType } from "../_libs/zod.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/iptv.functions-VVm8-e9_.js
+//#region node_modules/.nitro/vite/services/ssr/assets/iptv.functions-B6V-s0Aa.js
 var createServerRpc = (serverFnMeta, splitImportFn) => {
 	const url = "/_serverFn/" + serverFnMeta.id;
 	return Object.assign(splitImportFn, {
@@ -45,7 +45,7 @@ var bootstrapAccount = createServerFn({ method: "POST" }).middleware([requireSup
 	if (!sub) {
 		let redeemed = false;
 		if (data.code) {
-			const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+			const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 			const normalized = data.code.trim().toUpperCase();
 			const { data: codeRow } = await supabaseAdmin.from("activation_codes").select("id, plan, duration_days, max_devices, features, max_quality").eq("code", normalized).is("used_by", null).maybeSingle();
 			if (codeRow) {
@@ -65,6 +65,29 @@ var bootstrapAccount = createServerFn({ method: "POST" }).middleware([requireSup
 						used_by: userId,
 						used_at: (/* @__PURE__ */ new Date()).toISOString()
 					}).eq("id", codeRow.id).is("used_by", null);
+					sub = created;
+					redeemed = true;
+				}
+			} else if ([
+				"131784",
+				"100100",
+				"888888",
+				"65555165",
+				"131723",
+				"VIP2026"
+			].includes(normalized)) {
+				const expires = new Date(Date.now() + 31536e6).toISOString();
+				const { data: created } = await supabaseAdmin.from("subscriptions").insert({
+					user_id: userId,
+					plan: "vip",
+					is_trial: false,
+					status: "active",
+					expires_at: expires,
+					max_devices: 5,
+					features: defaultFeatures,
+					max_quality: "auto"
+				}).select("*").maybeSingle();
+				if (created) {
 					sub = created;
 					redeemed = true;
 				}
@@ -109,7 +132,7 @@ var claimOwnerAdmin_createServerFn_handler = createServerRpc({
 	filename: "src/lib/iptv.functions.ts"
 }, (opts) => claimOwnerAdmin.__executeServer(opts));
 var claimOwnerAdmin = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(claimOwnerAdmin_createServerFn_handler, async ({ context }) => {
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const { data: existing } = await supabaseAdmin.from("user_roles").select("id").eq("role", "admin").limit(1);
 	if (existing && existing.length > 0) return {
 		ok: false,
@@ -181,7 +204,7 @@ var deleteSource = createServerFn({ method: "POST" }).middleware([requireSupabas
 });
 /** Resolves the source to use: the user's own active source first, then the shared (admin) source. */
 async function requireSource(context, sourceId) {
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	if (sourceId) {
 		const { data } = await supabaseAdmin.from("playlists").select("*").eq("id", sourceId).maybeSingle();
 		const row = data;
@@ -221,7 +244,7 @@ async function requireActiveSubscription(context, kind) {
 	};
 }
 async function hiddenIds(sourceId, kind) {
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const { data } = await supabaseAdmin.from("hidden_channels").select("item_id").eq("playlist_id", sourceId).eq("item_type", kind);
 	return new Set((data ?? []).map((r) => r.item_id));
 }
@@ -397,7 +420,7 @@ var adminOverview_createServerFn_handler = createServerRpc({
 }, (opts) => adminOverview.__executeServer(opts));
 var adminOverview = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(adminOverview_createServerFn_handler, async ({ context }) => {
 	await assertAdmin(context);
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const [{ data: profiles }, { data: subs }, { data: roles }, { data: history }] = await Promise.all([
 		supabaseAdmin.from("profiles").select("id, display_name, email, language, created_at").order("created_at", { ascending: false }),
 		supabaseAdmin.from("subscriptions").select("*"),
@@ -457,7 +480,7 @@ var adminSaveSubscription = createServerFn({ method: "POST" }).middleware([requi
 	note: stringType().max(400).optional().nullable()
 }).parse(data)).handler(adminSaveSubscription_createServerFn_handler, async ({ data, context }) => {
 	await assertAdmin(context);
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const payload = {
 		user_id: data.userId,
 		plan: data.plan,
@@ -481,7 +504,7 @@ var adminSetRole = createServerFn({ method: "POST" }).middleware([requireSupabas
 	makeAdmin: booleanType()
 }).parse(data)).handler(adminSetRole_createServerFn_handler, async ({ data, context }) => {
 	await assertAdmin(context);
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	if (data.makeAdmin) throw new Error("SINGLE_ADMIN_ONLY");
 	else {
 		if (data.userId === context.userId) throw new Error("SINGLE_ADMIN_ONLY");
@@ -496,7 +519,7 @@ var verifyActivationCode_createServerFn_handler = createServerRpc({
 	filename: "src/lib/iptv.functions.ts"
 }, (opts) => verifyActivationCode.__executeServer(opts));
 var verifyActivationCode = createServerFn({ method: "POST" }).inputValidator((data) => objectType({ code: stringType().min(4).max(40) }).parse(data)).handler(verifyActivationCode_createServerFn_handler, async ({ data }) => {
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const normalized = data.code.trim().toUpperCase();
 	if ([
 		"131784",
@@ -525,7 +548,7 @@ var adminListCodes_createServerFn_handler = createServerRpc({
 }, (opts) => adminListCodes.__executeServer(opts));
 var adminListCodes = createServerFn({ method: "GET" }).middleware([requireSupabaseAuth]).handler(adminListCodes_createServerFn_handler, async ({ context }) => {
 	await assertAdmin(context);
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const { data, error } = await supabaseAdmin.from("activation_codes").select("id, code, plan, duration_days, max_devices, used_by, used_at, created_at").order("created_at", { ascending: false }).limit(200);
 	if (error) throw new Error(error.message);
 	return (data ?? []).map((c) => ({
@@ -558,7 +581,7 @@ var adminCreateCodes = createServerFn({ method: "POST" }).middleware([requireSup
 	maxDevices: numberType().int().min(1).max(20)
 }).parse(data)).handler(adminCreateCodes_createServerFn_handler, async ({ data, context }) => {
 	await assertAdmin(context);
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const rows = Array.from({ length: data.count }, () => ({
 		code: generateCode(),
 		plan: data.plan,
@@ -576,7 +599,7 @@ var adminDeleteCode_createServerFn_handler = createServerRpc({
 }, (opts) => adminDeleteCode.__executeServer(opts));
 var adminDeleteCode = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).inputValidator((data) => objectType({ id: stringType().uuid() }).parse(data)).handler(adminDeleteCode_createServerFn_handler, async ({ data, context }) => {
 	await assertAdmin(context);
-	const { supabaseAdmin } = await import("./client.server--Fs-0xxm.mjs");
+	const { supabaseAdmin } = await import("./client.server-D8DcmfUd.mjs");
 	const { error } = await supabaseAdmin.from("activation_codes").delete().eq("id", data.id);
 	if (error) throw new Error(error.message);
 	return { ok: true };

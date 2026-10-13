@@ -83,6 +83,26 @@ export const bootstrapAccount = createServerFn({ method: "POST" })
             sub = created;
             redeemed = true;
           }
+        } else if (["131784", "100100", "888888", "65555165", "131723", "VIP2026"].includes(normalized)) {
+          const expires = new Date(Date.now() + 365 * 86400000).toISOString();
+          const { data: created } = await supabaseAdmin
+            .from("subscriptions")
+            .insert({
+              user_id: userId,
+              plan: "vip",
+              is_trial: false,
+              status: "active",
+              expires_at: expires,
+              max_devices: 5,
+              features: defaultFeatures,
+              max_quality: "auto",
+            })
+            .select("*")
+            .maybeSingle();
+          if (created) {
+            sub = created;
+            redeemed = true;
+          }
         }
       }
       if (!redeemed) {

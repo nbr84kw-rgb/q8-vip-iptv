@@ -9,7 +9,7 @@ import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
 import { t as Route$17 } from "./watch-BQYdnQ8z.mjs";
 import { createHmac, timingSafeEqual } from "crypto";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-7ST9MW9o.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-Dw-ygqUK.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var styles_default = "/assets/styles-Dtafeubr.css";
@@ -205,7 +205,7 @@ function RootShell({ children }) {
 function RootComponent() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {});
 }
-var $$splitComponentImporter$12 = () => import("./routes-BRW5BYJB.mjs");
+var $$splitComponentImporter$12 = () => import("./routes-BdX-Xhe_.mjs");
 var Route$15 = createFileRoute("/")({
 	head: () => ({ meta: [
 		{ title: "Q8 VIP IPTV — بث مباشر وأفلام ومسلسلات" },
@@ -560,7 +560,7 @@ var Route$1 = createFileRoute("/api/auth/login")({ server: { handlers: {
 	POST: async ({ request }) => {
 		try {
 			const body = await request.json().catch(() => ({}));
-			const username = String(body.username || "").trim();
+			const username = String(body.username || body.code || "").trim();
 			if (!username) return new Response(JSON.stringify({ error: "الرجاء إدخال كود أو رقم الاشتراك" }), {
 				status: 400,
 				headers: {

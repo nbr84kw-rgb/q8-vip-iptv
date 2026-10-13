@@ -83,7 +83,25 @@ function AuthPage() {
           password: codePassword(normalized),
           options: { emailRedirectTo: window.location.origin },
         });
-        if (error) throw error;
+        if (error) {
+          if (error.message?.toLowerCase().includes("already registered")) {
+            const altEmail = `${normalized.toLowerCase()}.vip@kingvip.app`;
+            const altSignIn = await supabase.auth.signInWithPassword({
+              email: altEmail,
+              password: codePassword(normalized),
+            });
+            if (altSignIn.error) {
+              const altSignUp = await supabase.auth.signUp({
+                email: altEmail,
+                password: codePassword(normalized),
+                options: { emailRedirectTo: window.location.origin },
+              });
+              if (altSignUp.error) throw altSignUp.error;
+            }
+          } else {
+            throw error;
+          }
+        }
         // Redeem the code on first bootstrap inside the app.
         window.sessionStorage.setItem("kingvip.pendingCode", normalized);
         toast.success(lang === "ar" ? "تم تفعيل الكود" : "Code activated");

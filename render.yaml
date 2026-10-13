@@ -3,8 +3,8 @@ services:
     name: q8-vip-iptv
     env: node
     plan: free
-    buildCommand: npm install && npm run build
-    startCommand: node .output/server/index.mjs
+    buildCommand: npm install
+    startCommand: node server.js
     envVars:
       - key: NODE_VERSION
         value: 22.13.0
